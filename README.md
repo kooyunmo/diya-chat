@@ -3,7 +3,7 @@ Korean chatbot with various language models
 
 ---
 
-##1. Overview
+## 1. Overview
 
 - This project is written by both tensorflow and pytorch frameworks.
 - The models are trained by Korean QA-pair chatbot data.
