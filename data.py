@@ -241,7 +241,7 @@ def pred_next_string(value, dictionary):
     # 인덱스 배열 하나를 꺼내서 v에 넘겨준다.
     for v in value:
         # 딕셔너리에 있는 단어로 변경해서 배열에 담는다.
-        sentence_string = [dictionary[index] for index in v['indexs']]
+        sentence_string = [dictionary[index] for index in v]
 
     answer = ""
     # 패딩값도 담겨 있으므로 패딩은 모두 스페이스 처리 한다.
