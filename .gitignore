@@ -122,4 +122,4 @@ korean_pretrained_model/
 # korean chatbot data_in
 data_in/
 data_out/
-.html
+*.html
