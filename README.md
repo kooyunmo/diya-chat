@@ -14,10 +14,10 @@ Korean chatbot with various language models
 
 1. BERT(by fine-tuning pretrained model: KorBERT)
 2. Transformer (based on Attention is all you need)
-3. Seq2seq
-4. ELMo
-5. GPT
-6. xlNet
 
+### Data
+
+- We create new Q-A data set with the movie subtitles
+- The movie subtitle data came from https://www.gomlab.com/subtitle/
 
 
