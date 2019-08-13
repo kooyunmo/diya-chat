@@ -14,7 +14,7 @@ Korean chatbot with various language models
 
 1. BERT(by fine-tuning pretrained model: KorBERT)
 2. Transformer (based on Attention is all you need)
-3. LSTM
+3. Seq2seq
 4. ELMo
 5. GPT
 6. xlNet

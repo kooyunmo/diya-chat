@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*
+
 import tensorflow as tf
 import model as ml
 import data
@@ -14,6 +16,7 @@ def main(self):
     data_out_path = os.path.join(os.getcwd(), DATA_OUT_PATH)
     os.makedirs(data_out_path, exist_ok=True)
     # 데이터를 통한 사전 구성 한다.
+
     char2idx, idx2char, vocabulary_length = data.load_vocabulary()
     # 훈련 데이터와 테스트 데이터를 가져온다.
     train_input, train_label, eval_input, eval_label = data.load_data()
