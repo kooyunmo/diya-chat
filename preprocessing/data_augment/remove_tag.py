@@ -39,3 +39,6 @@ for file in os.listdir(DATA_IN_PATH):
 
     except IsADirectoryError:
         pass
+
+    except PermissionError:
+       pass
