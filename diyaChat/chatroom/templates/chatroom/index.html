@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>chatroom</title>
+</head>
+
+<body>
+
+    {% if chatroom_list %}
+        <ul>
+            {% for chatroom in chatroom_list %}
+                <li><a href="/chatroom/{{ chatroom.lm_name }}/">{{ chatroom.lm_name }}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No chatroom available</p>
+    {% endif %}
+
+</body>
+</html>

@@ -1,0 +1,332 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+<head>
+    <meta charset="utf-8" />
+    <title>chatroom</title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">            <!--rendering properly in mobile devices-->
+
+    <link rel="stylesheet" type="text/css" href="../../static/chatroom/style.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://use.fontawesome.com/45e03a14ce.js"></script>
+</head>
+
+<body>
+
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+        <header class="mdl-layout__header">
+            <div class="mdl-layout__header-row">
+                <span class="logo" role="link" tabindex="0">
+                    <img src="../../static/chatroom/logo.png">
+                </span>
+                <!-- Title -->
+                <a class="siteTitle" href ="{% url 'index' %}" style="text-decoration:none;">
+                    <span class="mdl-layout-title">
+                        <h1 style="font-size: 2rem; margin: 17px 10px;">DiyaChat</h1>
+                    </span>
+                </a>
+                <!-- Add spacer, to align navigation to the right -->
+                <div class="mdl-layout-spacer"></div>
+                <!-- Navigation. We hide it in small screens. -->
+            </div>
+        </header>
+        <div class="mdl-layout__drawer">
+            <a href="{% url 'index' %}"><span class="mdl-layout-title">Kyte</span></a>
+        </div>
+
+
+    <main class="mdl-layout__content">
+        <div class="page-content">
+
+
+        <div class="main_section">
+            <div class="container">
+                <div class="chat_container">
+                    <div class="col-sm-3 chat_sidebar">
+                        <div class="row">
+                            <div id="custom-search-input">
+                                <div class="input-group col-md-12">
+                                    <input type="text" class="  search-query form-control" placeholder="Search previous matching" />
+                                    <button class="btn btn-danger" type="button">
+                                        <span class=" glyphicon glyphicon-search"></span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="dropdown all_conversation">
+                                <button class="dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-weixin" aria-hidden="true"></i>
+                                    All Conversations
+                                    <span class="caret pull-right"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                                    <li><a href="#"> All Conversation </a>  <ul class="sub_menu_ list-unstyled">
+                                    <li><a href="#"> All Conversation </a> </li>
+                                    <li><a href="#">Another action</a></li>
+                                    <li><a href="#">Something else here</a></li>
+                                    <li><a href="#">Separated link</a></li>
+                                </ul>
+                            </div>
+
+
+                            <div class="member_list">
+                                <ul class="list-unstyled">
+                                    <li class="left clearfix">
+                                        <span class="chat-img pull-left">
+                                            <img src="http://www.sclance.com/pngs/profile-png/profile_png_1113720.png" class="img-circle">
+                                        </span>
+                                        <div class="chat-body clearfix">
+                                            <div class="header_sec">
+                                            <strong class="primary-font">6월 5일의 대화</strong>
+                                            <strong class="pull-right">09:45AM</strong>
+                                        </div>
+
+                                        <div class="contact_sec">
+                                            <strong class="primary-font">BERT</strong>
+                                            <span class="badge pull-right">4</span>
+                                        </div>
+                                    </li>
+
+                                    <li class="left clearfix">
+                                        <span class="chat-img pull-left">
+                                            <img src="http://www.sclance.com/pngs/profile-png/profile_png_1113720.png" alt="User Avatar" class="img-circle">
+                                        </span>
+                                        <div class="chat-body clearfix">
+                                            <div class="header_sec">
+                                                <strong class="primary-font">6월 3일의 대화</strong>
+                                                <strong class="pull-right ">01:13AM</strong>
+                                            </div>
+                                            <div class="contact_sec">
+                                                <strong class="primary-font">Transformer</strong>
+                                                <span class="badge pull-right">2</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="left clearfix">
+                                        <span class="chat-img pull-left">
+                                            <img src="http://www.sclance.com/pngs/profile-png/profile_png_1113720.png" class="img-circle">
+                                        </span>
+                                        <div class="chat-body clearfix">
+                                            <div class="header_sec">
+                                                <strong class="primary-font">6월 1일의 대화</strong>
+                                                <strong class="pull-right">2:08AM</strong>
+                                            </div>
+                                            <div class="contact_sec">
+                                                <strong class="primary-font">seq2seq</strong>
+                                                <span class="badge pull-right">3</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!--chat_sidebar-->
+
+
+                    <div class="col-sm-9 message_section">
+                        <div class="row">
+                            <div class="new_message_head">
+                                <div class="pull-left">
+                                    <button><i class="fa fa-plus-square-o" aria-hidden="true"></i> New Message</button>
+                                </div>
+
+                                <div class="pull-right">
+                                    <div class="dropdown">
+                                        <a href="{% url 'index' %}">
+                                            <input class="pull-right btn btn-success" type="button" value="End Conversation"/>
+                                        </a>
+
+                                        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+                                            <li><a href="#">Action</a></li>
+                                            <li><a href="#">Profile</a></li>
+                                            <li><a href="#">Logout</a></li>
+                                        </ul>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!--new_message_head-->
+
+                        <div id="chat_area">
+                            <p class="init_chat">
+
+                                {% if lm_name %}
+                                    The language model this chatroom uses is "{{ lm_name }}"
+                                {% else %}
+                                    access error
+                                {% endif %}
+
+                            </p>
+                            <ul id="chat-log" class="list-unstyled">
+                            </ul>
+                        </div>
+
+                        <div id="popup1" class="overlay">
+                            <div class="popup">
+                                <div>
+                                    <div class="assembleLogo"><img src="../../static/chat/assemble.png"></div>
+                                    <h2>mySquad Assemble!</h2>
+                                </div>
+                                <h4>Add into steam friend list.</h4>
+                                <a class="close" href="#">×</a>
+                                <div class="content">
+                                    <a target="_blank" rel="noopener noreferrer" href="http://s.team/p/nvp-ktng/VCTFMJDP">
+                                        <p>Hello my friend! Click here to friend me!</p>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="message_write">
+                            <!-- <textarea class="form-control" placeholder="type a message"></textarea> -->
+                            <input id="chat-message-input" class="form-control" type="text" placeholder="type a message" />
+                            <div class="clearfix"></div>
+                            <div class="chat_bottom">
+                                <input id="chat-message-submit" class="pull-right btn btn-success" type="button" value="Send"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!--message_section-->
+
+        </div>
+    </div>
+    </div>
+
+</body>
+
+<script>
+    var id = "{{ user.get_username }}";
+    var roomName = {{ lm_name }};
+
+    function addLogFromUser(message) {
+        var today = new Date();
+        var time = today.getHours() + ":" + today.getMinutes();
+        $("#chat-log").append("<li class='left clearfix admin_chat'><div style='text-align:right; padding-right: 65px;'>Me</div><div class='chat-body1 clearfix'><p style='text-align:right;''>" + message + "</p><div class='chat_time pull-right'>"+ time +"</div></div></li>");
+        $('#chat_area').animate({scrollTop: $('#chat_area').prop("scrollHeight")}, 500);
+    }
+
+    function addLogFromChatbot(message) {
+        var today = new Date();
+        var time = today.getHours() + ":" + today.getMinutes();
+        $("#chat-log").append("<li class='left clearfix'><span style='padding-left: 15px;'>DiyaChat</span><span class='chat-img1 pull-left'><a class='button' href='#popup1'><img src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' alt='User Avatar' class='img-circle'></a></span><div class='chat-body1 clearfix'><p>" + message + "</p><div class='chat_time pull-left'>"+ time +"</div></div></li>");
+        $('#chat_area').animate({scrollTop: $('#chat_area').prop("scrollHeight")}, 500);
+    }
+
+    function gotoBottom(id){
+        var element = document.getElementById(id);
+        element.scrollTop = element.scrollHeight - element.clientHeight;
+    }
+
+
+    var chatSocket = new WebSocket('ws://' + window.location.host + '/chatroom/' + roomName + '/');
+
+    chatSocket.onmessage = function(e) {
+        var data = JSON.parse(e.data);
+        var message = data['message'];
+        //document.querySelector('#chat-log').value += (message + '\n');
+
+        if(message.length > 0) {
+            addLogFromUser(message);
+        }
+    };
+
+
+    function showOptionsMenu(button) {
+      var songId = $(button).prevAll(".songId").val();    // button refers to the 'more.png' button
+      var menu = $(".optionsMenu"); // create a jquery object
+      var menuWidth = menu.width();
+
+      menu.find(".songId").val(songId);
+
+      var scrollTop = $(window).scrollTop();    // Distance from top of window to top of document
+      var elementOffset = $(button).offset().top;   // Distance from top of ducument to the button. $(button) is a jquery object.
+      var top = elementOffset - scrollTop;
+      var left = $(button).position().left;
+
+      menu.css({"top": top+"px", "left": left-menuWidth+"px", "display": "inline"});
+    }
+
+    chatSocket.onclose = function(e) {
+        console.error('Chat socket ' + roomName + ' closed unexpectedly');
+    };
+
+    document.querySelector('#chat-message-input').focus();
+    document.querySelector('#chat-message-input').onkeyup = function(e) {
+        if (e.keyCode === 13) {  // enter, return
+            document.querySelector('#chat-message-submit').click();
+        }
+    };
+
+    document.querySelector('#chat-message-submit').onclick = function(e) {
+        var messageInputDom = document.querySelector('#chat-message-input');
+        var message = messageInputDom.value;
+        chatSocket.send(JSON.stringify({
+            'message': message
+        }));
+
+        messageInputDom.value = '';
+    };
+
+
+
+
+
+    (function(e){var t,o={className:"autosizejs",append:"",callback:!1,resizeDelay:10},i='<textarea tabindex="-1" style="position:absolute; top:-999px; left:0; right:auto; bottom:auto; border:0; padding: 0; -moz-box-sizing:content-box; -webkit-box-sizing:content-box; box-sizing:content-box; word-wrap:break-word; height:0 !important; min-height:0 !important; overflow:hidden; transition:none; -webkit-transition:none; -moz-transition:none;"/>',n=["fontFamily","fontSize","fontWeight","fontStyle","letterSpacing","textTransform","wordSpacing","textIndent"],s=e(i).data("autosize",!0)[0];s.style.lineHeight="99px","99px"===e(s).css("lineHeight")&&n.push("lineHeight"),s.style.lineHeight="",e.fn.autosize=function(i){return this.length?(i=e.extend({},o,i||{}),s.parentNode!==document.body&&e(document.body).append(s),this.each(function(){function o(){var t,o;"getComputedStyle"in window?(t=window.getComputedStyle(u,null),o=u.getBoundingClientRect().width,e.each(["paddingLeft","paddingRight","borderLeftWidth","borderRightWidth"],function(e,i){o-=parseInt(t[i],10)}),s.style.width=o+"px"):s.style.width=Math.max(p.width(),0)+"px"}function a(){var a={};if(t=u,s.className=i.className,d=parseInt(p.css("maxHeight"),10),e.each(n,function(e,t){a[t]=p.css(t)}),e(s).css(a),o(),window.chrome){var r=u.style.width;u.style.width="0px",u.offsetWidth,u.style.width=r}}function r(){var e,n;t!==u?a():o(),s.value=u.value+i.append,s.style.overflowY=u.style.overflowY,n=parseInt(u.style.height,10),s.scrollTop=0,s.scrollTop=9e4,e=s.scrollTop,d&&e>d?(u.style.overflowY="scroll",e=d):(u.style.overflowY="hidden",c>e&&(e=c)),e+=w,n!==e&&(u.style.height=e+"px",f&&i.callback.call(u,u))}function l(){clearTimeout(h),h=setTimeout(function(){var e=p.width();e!==g&&(g=e,r())},parseInt(i.resizeDelay,10))}var d,c,h,u=this,p=e(u),w=0,f=e.isFunction(i.callback),z={height:u.style.height,overflow:u.style.overflow,overflowY:u.style.overflowY,wordWrap:u.style.wordWrap,resize:u.style.resize},g=p.width();p.data("autosize")||(p.data("autosize",!0),("border-box"===p.css("box-sizing")||"border-box"===p.css("-moz-box-sizing")||"border-box"===p.css("-webkit-box-sizing"))&&(w=p.outerHeight()-p.height()),c=Math.max(parseInt(p.css("minHeight"),10)-w||0,p.height()),p.css({overflow:"hidden",overflowY:"hidden",wordWrap:"break-word",resize:"none"===p.css("resize")||"vertical"===p.css("resize")?"none":"horizontal"}),"onpropertychange"in u?"oninput"in u?p.on("input.autosize keyup.autosize",r):p.on("propertychange.autosize",function(){"value"===event.propertyName&&r()}):p.on("input.autosize",r),i.resizeDelay!==!1&&e(window).on("resize.autosize",l),p.on("autosize.resize",r),p.on("autosize.resizeIncludeStyle",function(){t=null,r()}),p.on("autosize.destroy",function(){t=null,clearTimeout(h),e(window).off("resize",l),p.off("autosize").off(".autosize").css(z).removeData("autosize")}),r())})):this}})(window.jQuery||window.$);
+
+    var __slice=[].slice;(function(e,t){var n;n=function(){function t(t,n){var r,i,s,o=this;this.options=e.extend({},this.defaults,n);this.$el=t;s=this.defaults;for(r in s){i=s[r];if(this.$el.data(r)!=null){this.options[r]=this.$el.data(r)}}this.createStars();this.syncRating();this.$el.on("mouseover.starrr","span",function(e){return o.syncRating(o.$el.find("span").index(e.currentTarget)+1)});this.$el.on("mouseout.starrr",function(){return o.syncRating()});this.$el.on("click.starrr","span",function(e){return o.setRating(o.$el.find("span").index(e.currentTarget)+1)});this.$el.on("starrr:change",this.options.change)}t.prototype.defaults={rating:void 0,numStars:5,change:function(e,t){}};t.prototype.createStars=function(){var e,t,n;n=[];for(e=1,t=this.options.numStars;1<=t?e<=t:e>=t;1<=t?e++:e--){n.push(this.$el.append("<span class='glyphicon .glyphicon-star-empty'></span>"))}return n};t.prototype.setRating=function(e){if(this.options.rating===e){e=void 0}this.options.rating=e;this.syncRating();return this.$el.trigger("starrr:change",e)};t.prototype.syncRating=function(e){var t,n,r,i;e||(e=this.options.rating);if(e){for(t=n=0,i=e-1;0<=i?n<=i:n>=i;t=0<=i?++n:--n){this.$el.find("span").eq(t).removeClass("glyphicon-star-empty").addClass("glyphicon-star")}}if(e&&e<5){for(t=r=e;e<=4?r<=4:r>=4;t=e<=4?++r:--r){this.$el.find("span").eq(t).removeClass("glyphicon-star").addClass("glyphicon-star-empty")}}if(!e){return this.$el.find("span").removeClass("glyphicon-star").addClass("glyphicon-star-empty")}};return t}();return e.fn.extend({starrr:function(){var t,r;r=arguments[0],t=2<=arguments.length?__slice.call(arguments,1):[];return this.each(function(){var i;i=e(this).data("star-rating");if(!i){e(this).data("star-rating",i=new n(e(this),r))}if(typeof r==="string"){return i[r].apply(i,t)}})}})})(window.jQuery,window);$(function(){return $(".starrr").starrr()})
+
+    $(function(){
+
+      $('#new-review').autosize({append: "\n"});
+
+      var reviewBox = $('#post-review-box');
+      var newReview = $('#new-review');
+      var openReviewBtn = $('#open-review-box');
+      var closeReviewBtn = $('#close-review-box');
+      var ratingsField = $('#ratings-hidden');
+
+      openReviewBtn.click(function(e)
+      {
+        reviewBox.slideDown(400, function()
+          {
+            $('#new-review').trigger('autosize.resize');
+            newReview.focus();
+          });
+        openReviewBtn.fadeOut(100);
+        closeReviewBtn.show();
+      });
+
+      closeReviewBtn.click(function(e)
+      {
+        e.preventDefault();
+        reviewBox.slideUp(300, function()
+          {
+            newReview.focus();
+            openReviewBtn.fadeIn(200);
+          });
+        closeReviewBtn.hide();
+
+      });
+
+      $('.starrr').on('starrr:change', function(e, value){
+        ratingsField.val(value);
+      });
+    });
+</script>
+
+</html>

@@ -22,3 +22,13 @@ class Answer(models.Model):
 
     def __str__(self):
         return self.answer_text
+
+    def was_entered_recently(self):
+        return self.date_time >= timezone.now() - datetime.timedelta(days=1)
+
+class Room(models.Model):
+    # ex) seq2seq, transformer, BERT
+    lm_name = models.CharField(max_length=20)    # the chatbot language model adopted to chatroom
+
+    def __str__(self):
+        return self.lm_name
