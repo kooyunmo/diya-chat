@@ -213,12 +213,16 @@
 }
 
 #chat_area .chat-body1 {
+    text-align: right;
     margin-left: 50px;
 }
 
 .chat-body1 p {
-    background: #fbf9fa none repeat scroll 0 0;
-    padding: 10px;
+    background: #b0ebeb none repeat scroll 0 0;
+    padding: 10px 15px;
+    border-radius: 7px;
+    display: inline-block;
+    margin: 3px 0px 4px 0px;
 }
 
 #chat_area .admin_chat .chat-body1 {

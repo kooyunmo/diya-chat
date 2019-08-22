@@ -31,6 +31,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
+    'tf_model.apps.TfModelConfig',
     'chatroom.apps.ChatroomConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -69,6 +71,19 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'diyaChat.wsgi.application'
+
+
+# Channels
+# This should be included to use websocket
+ASGI_APPLICATION = 'diyaChat.routing.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 
 # Database

@@ -1,6 +1,6 @@
+from django.conf.urls import url
 from . import consumers
-from django.urls import path
 
 websocket_urlpatterns = [
-    path('<str:lm_name>/', consumers.ChatConsumer),
+    url(r'^ws/chatroom/(?P<room_name>[^/]+)/$', consumers.ChatConsumer),
 ]

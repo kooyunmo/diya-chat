@@ -26,3 +26,6 @@ def detail(request, lm_name):
 
     return HttpResponse("You're looking at chatroom using %s." % lm_name)
 
+
+def inference_answer_from_question(request):
+    url = request.POST.get('url')
