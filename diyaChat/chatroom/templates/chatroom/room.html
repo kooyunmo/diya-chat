@@ -33,7 +33,7 @@
                     <img src="../../static/chatroom/logo.png">
                 </span>
                 <!-- Title -->
-                <a class="siteTitle" href ="{% url 'index' %}" style="text-decoration:none;">
+                <a class="siteTitle" href ="{% url 'chatroom:index' %}" style="text-decoration:none;">
                     <span class="mdl-layout-title">
                         <h1 style="font-size: 2rem; margin: 17px 10px;">DiyaChat</h1>
                     </span>
@@ -44,7 +44,7 @@
             </div>
         </header>
         <div class="mdl-layout__drawer">
-            <a href="{% url 'index' %}"><span class="mdl-layout-title">Kyte</span></a>
+            <a href="{% url 'chatroom:index' %}"><span class="mdl-layout-title">Kyte</span></a>
         </div>
 
 
@@ -145,7 +145,7 @@
 
                                 <div class="pull-right">
                                     <div class="dropdown">
-                                        <a href="{% url 'index' %}">
+                                        <a href="{% url 'chatroom:index' %}">
                                             <input class="pull-right btn btn-success" type="button" value="End Conversation"/>
                                         </a>
 
@@ -207,11 +207,12 @@
         </div>
     </div>
     </div>
+    <div id="invisible" style="display:none"></div>
 
 </body>
 
 <script>
-
+    var timer;
     var roomName = {{ lm_name }};
     var chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chatroom/' + roomName + '/');
 
@@ -221,15 +222,25 @@
         $("#chat-log").append("<li class='left clearfix admin_chat'><div style='text-align:right; padding-right: 65px;'>나</div><div class='chat-body1 clearfix'><p style='text-align:right;''>" + message + "</p><br><div class='chat_time pull-right'>"+ time +"</div></div></li>");
         $('#chat_area').animate({scrollTop: $('#chat_area').prop("scrollHeight")}, 500);
     }
-    function addLogFromChatbot(message) {
-        var today = new Date();
-        var time = today.getHours() + ":" + today.getMinutes();
-        $("#chat-log").append("<li class='left clearfix'><span style='padding-left: 15px;'>DiyaChat</span><span class='chat-img1 pull-left'><a class='button' href='#popup1'><img src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' alt='User Avatar' class='img-circle'></a></span><div class='chat-body1 clearfix'><p>" + message + "</p><div class='chat_time pull-left'>"+ time +"</div></div></li>");
-        $('#chat_area').animate({scrollTop: $('#chat_area').prop("scrollHeight")}, 500);
-    }
+
+
     function gotoBottom(id){
         var element = document.getElementById(id);
         element.scrollTop = element.scrollHeight - element.clientHeight;
+    }
+
+    function openPage(url) {
+
+        history.pushState(null, null, url);			// changing the address without reload the page. [param: state, title, url]
+
+        var encodedUrl = encodeURI(url);
+
+        var $temp = $('#invisible').load(encodedUrl, function() {
+            var today = new Date();
+            var time = today.getHours() + ":" + today.getMinutes();
+            $('#chat-log').append("<li class='right clearfix'><span style='padding-left: 15px;'>DiyaChat</span><span class='chat-img1 pull-left'><a class='button' href='#popup1'><img src='../../static/chatroom/chatbot.png' alt='User Avatar' class='img-circle'></a></span><div class='chat-body2 clearfix'><p>" + $temp.html() + "</p><br><div class='chat_time pull-left'>"+ time +"</div></div></li>");
+            $('#chat_area').animate({scrollTop: $('#chat_area').prop("scrollHeight")}, 500);
+        });
     }
 
     chatSocket.onmessage = function(e) {
@@ -239,23 +250,7 @@
         if(message.length > 0) {
             addLogFromUser(message);
 
-            $(document).ready(function() {
-                $.ajax({
-                    url: message,
-                    type: "POST",
-                    dataType: "json",
-                    data: {
-                        message: message,
-                        csrfmiddlewaretoken: '{{ csrf_token }}'
-                    },
-                    success : function(json) {
-                        alert("Successfully sent the URL to Django");
-                    },
-                    error : function(xhr,errmsg,err) {
-                        alert("Could not send URL to Django. Error: " + xhr.status + ": " + xhr.responseText);
-                    }
-                });
-            });
+            openPage(message);
         }
     };
 

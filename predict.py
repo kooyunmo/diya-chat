@@ -52,6 +52,8 @@ if __name__ == '__main__':
             'xavier_initializer': DEFINES.xavier_initializer
         })
 
+    answer = ""
+
     for i in range(DEFINES.max_sequence_length):
         if i > 0:
             predic_output_dec, predic_output_decLength = data.dec_output_processing([answer], char2idx)
