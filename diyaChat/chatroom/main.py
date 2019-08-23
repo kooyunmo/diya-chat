@@ -9,7 +9,7 @@ import sys
 
 from .configs import DEFINES
 
-DATA_OUT_PATH = './data_out/'
+DATA_OUT_PATH = '../data_out/'
 
 
 def main(self):
