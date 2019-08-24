@@ -125,4 +125,4 @@ data_out/
 subtitles_html/
 
 # ignore jupyter notebook
-.ipynb
+*.ipynb
