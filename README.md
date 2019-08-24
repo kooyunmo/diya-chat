@@ -1,7 +1,6 @@
 # KoreanChatbot
 Korean chatbot with various language models
 
----
 
 ## 1. Overview
 
@@ -21,7 +20,7 @@ Korean chatbot with various language models
 - The movie subtitle data came from https://www.gomlab.com/subtitle/
 
 
----
+## 2. Install and Run
 
 * 파이썬 가상환경 설정(https://tutorial.djangogirls.org/ko/django_installation/)
 
