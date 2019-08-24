@@ -19,7 +19,7 @@ import time
 
 
 def index(request):
-    chatroom_list = Room.objects.order_by('lm_name')[:3]
+    chatroom_list = Room.objects.order_by('rank')[:3]
     context = {
         'chatroom_list': chatroom_list
     }
@@ -27,7 +27,7 @@ def index(request):
 
 
 def room(request, lm_name):
-    chatroom_list = Room.objects.order_by('lm_name')[:3]
+    chatroom_list = Room.objects.order_by('rank')[:3]
 
     context = {
         'lm_name': mark_safe(json.dumps(lm_name)),
@@ -42,6 +42,9 @@ def detail(request, lm_name):
 
 
 def message(request, message, lm_name):
+    # if lm_name === 'tranformer':
+    # if lm_name === 'seq2seq':
+    # if lm_name === 'bert':
     #return HttpResponse("answer: %s" % (message))
 
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'

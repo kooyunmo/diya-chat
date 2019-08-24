@@ -29,6 +29,12 @@ class Answer(models.Model):
 class Room(models.Model):
     # ex) seq2seq, transformer, BERT
     lm_name = models.CharField(max_length=20)    # the chatbot language model adopted to chatroom
+    subtitle = models.CharField(max_length=80)
+    description = models.CharField(max_length=200)
+    paper_link = models.CharField(max_length=200)
+    rank = models.IntegerField(default=0)
+    loss = models.FloatField(default=0)
+
 
     def __str__(self):
         return self.lm_name

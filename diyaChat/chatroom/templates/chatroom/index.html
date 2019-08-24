@@ -36,15 +36,15 @@
                 <div class="card card-pricing text-center px-3 mb-4">
                     <span class="h6 w-60 mx-auto px-4 py-1 rounded-bottom bg-primary text-white shadow-sm">{{ chatroom.lm_name }}</span>
                     <div class="bg-transparent card-header pt-4 border-0">
-                        <h1 class="h1 font-weight-normal text-primary text-center mb-0" data-pricing-value="15"><span class="price">Attention is all you need</span></h1>
+                        <h1 class="h2 font-weight-normal text-primary text-center mb-0" data-pricing-value="15"><span class="price">{{ chatroom.subtitle }}</span></h1>
                     </div>
                     <div class="card-body pt-0">
                         <ul class="list-unstyled mb-4">
                             <!-- 나중에는 model.py의 Room 모델에 description, loss 등의 field를 추가할 것 -->
-                            <li>Description: {{ chatroom.lm_name }}</li>
-                            <li>Loss: {{ chatroom.lm_name }}</li>
-                            <li>Rank: {{ chatroom.lm_name }}</li>
-                            <li>paper link: {{ chatroom.lm_name }}</li>
+                            <li>Description: {{ chatroom.description }}</li>
+                            <li>Loss: {{ chatroom.loss }}</li>
+                            <li>Rank: {{ chatroom.rank }}</li>
+                            <li>paper link: <a href="{{ chatroom.paper_link }}">{{ chatroom.lm_name }}</a></li>
                         </ul>
                         <a href="/chatroom/{{ chatroom.lm_name }}/">
                             <button type="button" class="btn btn-outline-secondary mb-3">
