@@ -111,6 +111,16 @@ logs/
 checkpoints/
 
 
+# ignore os dependent foler managing system file
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+
 # ignore large pickle files
 pickle/
 
