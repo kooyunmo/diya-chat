@@ -123,3 +123,6 @@ korean_pretrained_model/
 data_in/
 data_out/
 subtitles_html/
+
+# ignore jupyter notebook
+.ipynb
