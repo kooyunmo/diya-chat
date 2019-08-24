@@ -19,7 +19,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1">            <!--rendering properly in mobile devices-->
 
-    <link rel="stylesheet" type="text/css" href="../../static/chatroom/style.css">
+    <link rel="stylesheet" type="text/css" href="../../static/chatroom/css/style.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
@@ -29,13 +29,10 @@
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
         <header class="mdl-layout__header">
             <div class="mdl-layout__header-row">
-                <span class="logo" role="link" tabindex="0">
-                    <img src="../../static/chatroom/logo.png">
-                </span>
                 <!-- Title -->
                 <a class="siteTitle" href ="{% url 'chatroom:index' %}" style="text-decoration:none;">
-                    <span class="mdl-layout-title">
-                        <h1 style="font-size: 2rem; margin: 17px 10px;">DiyaChat</h1>
+                    <span class="logo" role="link" tabindex="0">
+                        <img src="../../static/chatroom/img/logo.png">
                     </span>
                 </a>
                 <!-- Add spacer, to align navigation to the right -->
@@ -43,170 +40,186 @@
                 <!-- Navigation. We hide it in small screens. -->
             </div>
         </header>
+
         <div class="mdl-layout__drawer">
-            <a href="{% url 'chatroom:index' %}"><span class="mdl-layout-title">Kyte</span></a>
+            <div id="logoNameContainer">
+                <a href="{% url 'chatroom:index' %}">
+                    <span class="logo" role="link" tabindex="0">
+                        <img src="../../static/chatroom/img/logo.png" style="width:200px; margin: 8px;">
+                    </span>
+                </a>
+            </div>
+            <nav class="mdl-navigation">
+
+            {% for chatroom in chatroom_list %}
+                <a class="mdl-navigation__link" href="/chatroom/{{ chatroom.lm_name }}/" style="text-decoration:none; color:#ffffff;">{{ chatroom.lm_name }}</a>
+            {% endfor %}
+
+            </nav>
         </div>
 
 
-    <main class="mdl-layout__content">
-        <div class="page-content">
+        <main class="mdl-layout__content">
+            <div class="page-content">
 
 
-        <div class="main_section">
-            <div class="container">
-                <div class="chat_container">
-                    <div class="col-sm-3 chat_sidebar">
-                        <div class="row">
-                            <div id="custom-search-input">
-                                <div class="input-group col-md-12">
-                                    <input type="text" class="  search-query form-control" placeholder="Search previous matching" />
-                                    <button class="btn btn-danger" type="button">
-                                        <span class=" glyphicon glyphicon-search"></span>
+            <div class="main_section">
+                <div class="container">
+                    <div class="chat_container">
+                        <div class="col-sm-3 chat_sidebar">
+                            <div class="row">
+                                <div id="custom-search-input">
+                                    <div class="input-group col-md-12">
+                                        <input type="text" class="  search-query form-control" placeholder="Search previous matching" />
+                                        <button class="btn btn-danger" type="button">
+                                            <span class=" glyphicon glyphicon-search"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="dropdown all_conversation">
+                                    <button class="dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fa fa-weixin" aria-hidden="true"></i>
+                                        All Conversations
+                                        <span class="caret pull-right"></span>
                                     </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                                        <li><a href="#"> All Conversation </a>  <ul class="sub_menu_ list-unstyled">
+                                        <li><a href="#"> All Conversation </a> </li>
+                                        <li><a href="#">Another action</a></li>
+                                        <li><a href="#">Something else here</a></li>
+                                        <li><a href="#">Separated link</a></li>
+                                    </ul>
                                 </div>
-                            </div>
-                            <div class="dropdown all_conversation">
-                                <button class="dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fa fa-weixin" aria-hidden="true"></i>
-                                    All Conversations
-                                    <span class="caret pull-right"></span>
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                                    <li><a href="#"> All Conversation </a>  <ul class="sub_menu_ list-unstyled">
-                                    <li><a href="#"> All Conversation </a> </li>
-                                    <li><a href="#">Another action</a></li>
-                                    <li><a href="#">Something else here</a></li>
-                                    <li><a href="#">Separated link</a></li>
-                                </ul>
-                            </div>
 
 
-                            <div class="member_list">
-                                <ul class="list-unstyled">
-                                    <li class="left clearfix">
-                                        <span class="chat-img pull-left">
-                                            <img src="http://www.sclance.com/pngs/profile-png/profile_png_1113720.png" class="img-circle">
-                                        </span>
-                                        <div class="chat-body clearfix">
-                                            <div class="header_sec">
-                                            <strong class="primary-font">6월 5일의 대화</strong>
-                                            <strong class="pull-right">09:45AM</strong>
-                                        </div>
-
-                                        <div class="contact_sec">
-                                            <strong class="primary-font">BERT</strong>
-                                            <span class="badge pull-right">4</span>
-                                        </div>
-                                    </li>
-
-                                    <li class="left clearfix">
-                                        <span class="chat-img pull-left">
-                                            <img src="http://www.sclance.com/pngs/profile-png/profile_png_1113720.png" alt="User Avatar" class="img-circle">
-                                        </span>
-                                        <div class="chat-body clearfix">
-                                            <div class="header_sec">
-                                                <strong class="primary-font">6월 3일의 대화</strong>
-                                                <strong class="pull-right ">01:13AM</strong>
+                                <div class="member_list">
+                                    <ul class="list-unstyled">
+                                        <li class="left clearfix">
+                                            <span class="chat-img pull-left">
+                                                <img src="http://www.sclance.com/pngs/profile-png/profile_png_1113720.png" class="img-circle">
+                                            </span>
+                                            <div class="chat-body clearfix">
+                                                <div class="header_sec">
+                                                <strong class="primary-font">6월 5일의 대화</strong>
+                                                <strong class="pull-right">09:45AM</strong>
                                             </div>
+
                                             <div class="contact_sec">
-                                                <strong class="primary-font">Transformer</strong>
-                                                <span class="badge pull-right">2</span>
+                                                <strong class="primary-font">BERT</strong>
+                                                <span class="badge pull-right">4</span>
                                             </div>
-                                        </div>
-                                    </li>
-                                    <li class="left clearfix">
-                                        <span class="chat-img pull-left">
-                                            <img src="http://www.sclance.com/pngs/profile-png/profile_png_1113720.png" class="img-circle">
-                                        </span>
-                                        <div class="chat-body clearfix">
-                                            <div class="header_sec">
-                                                <strong class="primary-font">6월 1일의 대화</strong>
-                                                <strong class="pull-right">2:08AM</strong>
+                                        </li>
+
+                                        <li class="left clearfix">
+                                            <span class="chat-img pull-left">
+                                                <img src="http://www.sclance.com/pngs/profile-png/profile_png_1113720.png" alt="User Avatar" class="img-circle">
+                                            </span>
+                                            <div class="chat-body clearfix">
+                                                <div class="header_sec">
+                                                    <strong class="primary-font">6월 3일의 대화</strong>
+                                                    <strong class="pull-right ">01:13AM</strong>
+                                                </div>
+                                                <div class="contact_sec">
+                                                    <strong class="primary-font">Transformer</strong>
+                                                    <span class="badge pull-right">2</span>
+                                                </div>
                                             </div>
-                                            <div class="contact_sec">
-                                                <strong class="primary-font">seq2seq</strong>
-                                                <span class="badge pull-right">3</span>
+                                        </li>
+                                        <li class="left clearfix">
+                                            <span class="chat-img pull-left">
+                                                <img src="http://www.sclance.com/pngs/profile-png/profile_png_1113720.png" class="img-circle">
+                                            </span>
+                                            <div class="chat-body clearfix">
+                                                <div class="header_sec">
+                                                    <strong class="primary-font">6월 1일의 대화</strong>
+                                                    <strong class="pull-right">2:08AM</strong>
+                                                </div>
+                                                <div class="contact_sec">
+                                                    <strong class="primary-font">seq2seq</strong>
+                                                    <span class="badge pull-right">3</span>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </li>
-                                </ul>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <!--chat_sidebar-->
+                        <!--chat_sidebar-->
 
 
-                    <div class="col-sm-9 message_section">
-                        <div class="row">
-                            <div class="new_message_head">
-                                <div class="pull-left">
-                                    <button><i class="fa fa-plus-square-o" aria-hidden="true"></i> New Message</button>
+                        <div class="col-sm-9 message_section">
+                            <div class="row">
+                                <div class="new_message_head">
+                                    <div class="pull-left">
+                                        <button><i class="fa fa-plus-square-o" aria-hidden="true"></i> New Message</button>
+                                    </div>
+
+                                    <div class="pull-right">
+                                        <div class="dropdown">
+                                            <a href="{% url 'chatroom:index' %}">
+                                                <input class="pull-right btn btn-success" type="button" value="End Conversation"/>
+                                            </a>
+
+                                            <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+                                                <li><a href="#">Action</a></li>
+                                                <li><a href="#">Profile</a></li>
+                                                <li><a href="#">Logout</a></li>
+                                            </ul>
+                                    </div>
                                 </div>
 
-                                <div class="pull-right">
-                                    <div class="dropdown">
-                                        <a href="{% url 'chatroom:index' %}">
-                                            <input class="pull-right btn btn-success" type="button" value="End Conversation"/>
+                            </div>
+
+                            <!--new_message_head-->
+
+                            <div id="chat_area">
+                                <p class="init_chat">
+
+                                    {% if lm_name %}
+                                        The language model this chatroom uses is {{ lm_name }}
+                                    {% else %}
+                                        access error
+                                    {% endif %}
+
+                                </p>
+                                <ul id="chat-log" class="list-unstyled">
+                                </ul>
+                            </div>
+
+                            <div id="popup1" class="overlay">
+                                <div class="popup">
+                                    <div>
+                                        <div class="assembleLogo"><img src="../../static/chatroom/img/github-logo.png"></div>
+                                        <h2>Contact Me!</h2>
+                                    </div>
+                                    <h4>Hello, thank you for use our chatbot service. You can contact us through this link!</h4>
+                                    <a class="close" href="#">×</a>
+                                    <div class="content">
+                                        <a target="_blank" rel="noopener noreferrer" href="https://github.com/kooyunmo/">
+                                            <p>Click here to visit my git repository!</p>
                                         </a>
-
-                                        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
-                                            <li><a href="#">Action</a></li>
-                                            <li><a href="#">Profile</a></li>
-                                            <li><a href="#">Logout</a></li>
-                                        </ul>
+                                    </div>
                                 </div>
                             </div>
 
-                        </div>
 
-                        <!--new_message_head-->
-
-                        <div id="chat_area">
-                            <p class="init_chat">
-
-                                {% if lm_name %}
-                                    The language model this chatroom uses is {{ lm_name }}
-                                {% else %}
-                                    access error
-                                {% endif %}
-
-                            </p>
-                            <ul id="chat-log" class="list-unstyled">
-                            </ul>
-                        </div>
-
-                        <div id="popup1" class="overlay">
-                            <div class="popup">
-                                <div>
-                                    <div class="assembleLogo"><img src="../../static/chat/assemble.png"></div>
-                                    <h2>mySquad Assemble!</h2>
+                            <div class="message_write">
+                                <!-- <textarea class="form-control" placeholder="type a message"></textarea> -->
+                                <input id="chat-message-input" class="form-control" type="text" placeholder="type a message" />
+                                <div class="clearfix"></div>
+                                <div class="chat_bottom">
+                                    <input id="chat-message-submit" class="pull-right btn btn-success" type="button" value="Send"/>
                                 </div>
-                                <h4>Add into steam friend list.</h4>
-                                <a class="close" href="#">×</a>
-                                <div class="content">
-                                    <a target="_blank" rel="noopener noreferrer" href="http://s.team/p/nvp-ktng/VCTFMJDP">
-                                        <p>Hello my friend! Click here to friend me!</p>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="message_write">
-                            <!-- <textarea class="form-control" placeholder="type a message"></textarea> -->
-                            <input id="chat-message-input" class="form-control" type="text" placeholder="type a message" />
-                            <div class="clearfix"></div>
-                            <div class="chat_bottom">
-                                <input id="chat-message-submit" class="pull-right btn btn-success" type="button" value="Send"/>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div><!--message_section-->
+                </div><!--message_section-->
 
-        </div>
+            </div>
+            </div>
+        </main>
     </div>
-    </div>
+
     <div id="invisible" style="display:none"></div>
 
 </body>
@@ -238,7 +251,7 @@
         var $temp = $('#invisible').load(encodedUrl, function() {
             var today = new Date();
             var time = today.getHours() + ":" + today.getMinutes();
-            $('#chat-log').append("<li class='right clearfix'><span style='padding-left: 15px;'>DiyaChat</span><span class='chat-img1 pull-left'><a class='button' href='#popup1'><img src='../../static/chatroom/chatbot.png' alt='User Avatar' class='img-circle'></a></span><div class='chat-body2 clearfix'><p>" + $temp.html() + "</p><br><div class='chat_time pull-left'>"+ time +"</div></div></li>");
+            $('#chat-log').append("<li class='right clearfix'><span style='padding-left: 15px;'>DiyaChat</span><span class='chat-img1 pull-left'><a class='button' href='#popup1'><img src='../../static/chatroom/img/chatbot.png' alt='User Avatar' class='img-circle'></a></span><div class='chat-body2 clearfix'><p>" + $temp.html() + "</p><br><div class='chat_time pull-left'>"+ time +"</div></div></li>");
             $('#chat_area').animate({scrollTop: $('#chat_area').prop("scrollHeight")}, 500);
         });
     }

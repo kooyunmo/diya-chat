@@ -27,8 +27,11 @@ def index(request):
 
 
 def room(request, lm_name):
+    chatroom_list = Room.objects.order_by('lm_name')[:3]
+
     context = {
-        'lm_name': mark_safe(json.dumps(lm_name))
+        'lm_name': mark_safe(json.dumps(lm_name)),
+        'chatroom_list': chatroom_list
     }
     return render(request, 'chatroom/room.html', context)
 

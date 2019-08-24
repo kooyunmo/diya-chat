@@ -1,21 +1,76 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8"/>
-    <title>chatroom</title>
-</head>
+{% extends 'chatroom/base.html' %}
 
-<body>
+{% block content %}
 
-    {% if chatroom_list %}
-        <ul>
+<div id="slides" class="col-md-12">
+    <div class="overlay"></div>
+
+    <div class="slides-container">
+        <img src="../../static/chatroom/img/slide1.jpg" alt="">
+        <img src="../../static/chatroom/img/slide2.jpg" alt="">
+        <img src="../../static/chatroom/img/slide3.jpg" alt="">
+        <img src="../../static/chatroom/img/slide4.jpg" alt="">
+    </div>
+
+    <div class="titleMessage">
+        <div class="heading">
+        <p class="main">Diya Chat</p>
+        <p class="sub typed" style="padding-top:15px;"></p>
+        </div>
+    </div>
+
+    <nav class="slides-navigation" style="width:100%;">
+        <a href="#" class="next" style="right:4%;"></a>
+        <a href="#" class="prev" style="left:2%"></a>
+    </nav>
+</div>
+
+
+<div class="container mb-5 mt-5">
+    <div class="pricing card-deck flex-column flex-md-row mb-3">
+
+        {% if chatroom_list %}
+
             {% for chatroom in chatroom_list %}
-                <li><a href="/chatroom/{{ chatroom.lm_name }}/">{{ chatroom.lm_name }}</a></li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No chatroom available</p>
-    {% endif %}
 
-</body>
-</html>
+                <div class="card card-pricing text-center px-3 mb-4">
+                    <span class="h6 w-60 mx-auto px-4 py-1 rounded-bottom bg-primary text-white shadow-sm">{{ chatroom.lm_name }}</span>
+                    <div class="bg-transparent card-header pt-4 border-0">
+                        <h1 class="h1 font-weight-normal text-primary text-center mb-0" data-pricing-value="15"><span class="price">Attention is all you need</span></h1>
+                    </div>
+                    <div class="card-body pt-0">
+                        <ul class="list-unstyled mb-4">
+                            <!-- 나중에는 model.py의 Room 모델에 description, loss 등의 field를 추가할 것 -->
+                            <li>Description: {{ chatroom.lm_name }}</li>
+                            <li>Loss: {{ chatroom.lm_name }}</li>
+                            <li>Rank: {{ chatroom.lm_name }}</li>
+                            <li>paper link: {{ chatroom.lm_name }}</li>
+                        </ul>
+                        <a href="/chatroom/{{ chatroom.lm_name }}/">
+                            <button type="button" class="btn btn-outline-secondary mb-3">
+                                Start Conversation
+                            </button>
+                        </a>
+                    </div>
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <p>No chatroom available</p>
+
+        {% endif %}
+
+    </div>
+</div>
+
+<div class="text-muted mt-5 mb-5 text-center small">
+    <a class="text-muted" target="_blank" href="https://github.com/kooyunmo/KoreanChatbot">
+        <img class="git-logo" src="../../static/chatroom/img/github-logo.png" alt="" style="width:30px; padding:5px;">
+        <span>KoreanChatbot github</span>
+    </a>
+</div>
+
+
+{% endblock content %}
