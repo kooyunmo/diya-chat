@@ -12,7 +12,7 @@ tf.app.flags.DEFINE_integer('model_hidden_size', 128, 'model weights size')  # �
 tf.app.flags.DEFINE_integer('ffn_hidden_size', 512, 'ffn weights size')  # ffn 가중치 크기
 tf.app.flags.DEFINE_integer('attention_head_size', 4, 'attn head size')  # 멀티 헤드 크기
 tf.app.flags.DEFINE_integer('layer_size', 2, 'layer size')  # 논문은 6개 레이어이나 2개 사용 학습 속도 및 성능 튜닝
-tf.app.flags.DEFINE_string('data_path', './data_in/ChatBotData.csv', 'data path')  # 데이터 위치
+tf.app.flags.DEFINE_string('data_path', './../data_in/ChatBotData.csv', 'data path')  # 데이터 위치
 tf.app.flags.DEFINE_string('vocabulary_path', './data_out/vocabularyData.voc', 'vocabulary path')  # 사전 위치
 tf.app.flags.DEFINE_string('check_point_path', './data_out/check_point', 'check point path')  # 체크 포인트 위치
 tf.app.flags.DEFINE_boolean('tokenize_as_morph', False, 'set morph tokenize')  # 형태소에 따른 토크나이징 사용 유무

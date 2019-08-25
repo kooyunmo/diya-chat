@@ -36,7 +36,7 @@ sklearn.model_selection.train_test_split
 
 def load_data():
     # 판다스를 통해서 데이터를 불러온다.
-    data_df = pd.read_csv(DEFINES.data_path, header=0)
+    data_df = pd.read_csv(DEFINES.data_path_transformer, header=0)
 
     # 질문과 답변 열을 가져와 question과 answer에 넣는다.
     question, answer = list(data_df['Q']), list(data_df['A'])
@@ -78,7 +78,7 @@ def enc_processing(value, dictionary):
     # 길이를 가지고 있다.(누적된다.)
     sequences_length = []
     # 형태소 토크나이징 사용 유무
-    if DEFINES.tokenize_as_morph:
+    if DEFINES.tokenize_as_morph_transformer:
         value = prepro_like_morphlized(value)
 
     # 한줄씩 불어온다.
@@ -100,14 +100,16 @@ def enc_processing(value, dictionary):
                 sequence_index.extend([dictionary[UNK]])
 
         # 문장 제한 길이보다 길어질 경우 뒤에 토큰을 자르고 있다.
-        if len(sequence_index) > DEFINES.max_sequence_length:
-            sequence_index = sequence_index[:DEFINES.max_sequence_length]
+        if len(sequence_index) > DEFINES.max_sequence_length_transformer:
+            sequence_index = sequence_index[:
+                                            DEFINES.max_sequence_length_transformer]
 
         # 하나의 문장에 길이를 넣어주고 있다.
         sequences_length.append(len(sequence_index))
 
         # max_sequence_length보다 문장 길이가 작다면 빈 부분에 PAD(0)를 넣어준다.
-        sequence_index += (DEFINES.max_sequence_length - len(sequence_index)) * [dictionary[PAD]]
+        sequence_index += (DEFINES.max_sequence_length_transformer -
+                           len(sequence_index)) * [dictionary[PAD]]
 
         # 인덱스화 되어 있는 값을 sequences_input_index에 넣어 준다.
         sequences_input_index.append(sequence_index)
@@ -127,7 +129,7 @@ def dec_output_processing(value, dictionary):
     # 길이를 가지고 있다.(누적된다)
     sequences_length = []
     # 형태소 토크나이징 사용 유무
-    if DEFINES.tokenize_as_morph:
+    if DEFINES.tokenize_as_morph_transformer:
         value = prepro_like_morphlized(value)
     # 한줄씩 불어온다.
     for sequence in value:
@@ -144,15 +146,17 @@ def dec_output_processing(value, dictionary):
         sequence_index = [dictionary[STD]] + [dictionary[word] for word in sequence.split()]
 
         # 문장 제한 길이보다 길어질 경우 뒤에 토큰을 자르고 있다.
-        if len(sequence_index) > DEFINES.max_sequence_length:
-            sequence_index = sequence_index[:DEFINES.max_sequence_length]
+        if len(sequence_index) > DEFINES.max_sequence_length_transformer:
+            sequence_index = sequence_index[:
+                                            DEFINES.max_sequence_length_transformer]
 
         # 하나의 문장에 길이를 넣어주고 있다.
         sequences_length.append(len(sequence_index))
 
         # max_sequence_length보다 문장 길이가
         # 작다면 빈 부분에 PAD(0)를 넣어준다.
-        sequence_index += (DEFINES.max_sequence_length - len(sequence_index)) * [dictionary[PAD]]
+        sequence_index += (DEFINES.max_sequence_length_transformer -
+                           len(sequence_index)) * [dictionary[PAD]]
         # 인덱스화 되어 있는 값을
         # sequences_output_index 넣어 준다.
         sequences_output_index.append(sequence_index)
@@ -170,7 +174,7 @@ def dec_target_processing(value, dictionary):
     # 배열이다.(누적된다)
     sequences_target_index = []
     # 형태소 토크나이징 사용 유무
-    if DEFINES.tokenize_as_morph:
+    if DEFINES.tokenize_as_morph_transformer:
         value = prepro_like_morphlized(value)
     # 한줄씩 불어온다.
     for sequence in value:
@@ -185,13 +189,15 @@ def dec_target_processing(value, dictionary):
 
         # 문장 제한 길이보다 길어질 경우 뒤에 토큰을 자르고 있다.
         # 그리고 END 토큰을 넣어 준다
-        if len(sequence_index) >= DEFINES.max_sequence_length:
-            sequence_index = sequence_index[:DEFINES.max_sequence_length - 1] + [dictionary[END]]
+        if len(sequence_index) >= DEFINES.max_sequence_length_transformer:
+            sequence_index = sequence_index[:DEFINES.max_sequence_length_transformer - 1] + [
+                dictionary[END]]
         else:
             sequence_index += [dictionary[END]]
 
         # max_sequence_length보다 문장 길이가 작다면 빈 부분에 PAD(0)를 넣어준다.
-        sequence_index += (DEFINES.max_sequence_length - len(sequence_index)) * [dictionary[PAD]]
+        sequence_index += (DEFINES.max_sequence_length_transformer -
+                           len(sequence_index)) * [dictionary[PAD]]
         # 인덱스화 되어 있는 값을 sequences_target_index에 넣어 준다.
         sequences_target_index.append(sequence_index)
 
@@ -342,16 +348,17 @@ def load_vocabulary():
 
     # 사전을 구성한 후 파일로 저장 진행한다.
     # 그 파일의 존재 유무를 확인한다.
-    if (not (os.path.exists(DEFINES.vocabulary_path))):
+    if (not (os.path.exists(DEFINES.vocabulary_path_transformer))):
         # 이미 생성된 사전 파일이 존재하지 않으므로 데이터를 가지고 만들어야 한다.
         # 데이터가 존재 하면 사전을 만들기 위해서 데이터 파일의 존재 유무를 확인한다.
-        if (os.path.exists(DEFINES.data_path)):
+        if (os.path.exists(DEFINES.data_path_transformer)):
             # 데이터가 존재하면 pandas를 통해서 데이터를 불러오자
-            data_df = pd.read_csv(DEFINES.data_path, encoding='utf-8')
+            data_df = pd.read_csv(
+                DEFINES.data_path_transformer, encoding='utf-8')
 
             # 판다스의 데이터 프레임을 통해서 질문과 답에 대한 열을 가져 온다.
             question, answer = list(data_df['Q']), list(data_df['A'])
-            if DEFINES.tokenize_as_morph:  # 형태소에 따른 토크나이져 처리
+            if DEFINES.tokenize_as_morph_transformer:  # 형태소에 따른 토크나이져 처리
                 question = prepro_like_morphlized(question)
                 answer = prepro_like_morphlized(answer)
 
@@ -378,12 +385,12 @@ def load_vocabulary():
             words[:0] = MARKER
 
         # 사전 리스트를 사전 파일로 만들어 넣는다.
-        with open(DEFINES.vocabulary_path, 'w', encoding='utf-8') as vocabulary_file:
+        with open(DEFINES.vocabulary_path_transformer, 'w', encoding='utf-8') as vocabulary_file:
             for word in words:
                 vocabulary_file.write(word + '\n')
 
     # 사전 파일이 존재하면 여기에서 그 파일을 불러서 배열에 넣어 준다.
-    with open(DEFINES.vocabulary_path, 'r', encoding='utf-8') as vocabulary_file:
+    with open(DEFINES.vocabulary_path_transformer, 'r', encoding='utf-8') as vocabulary_file:
         for line in vocabulary_file:
             vocabulary_list.append(line.strip())
 

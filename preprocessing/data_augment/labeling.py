@@ -3,7 +3,7 @@ from tqdm import tqdm
 import pickle
 
 #경로 지정
-data_path = "C:/Users/임상규/Documents/NLP/KoreanChatbot/preprocessing/data_augment/subtitles_html"
+data_path = "./subtitles_html"
 os.chdir(data_path)
 
 #전처리할 파일 이름 입력 후 파일 읽기

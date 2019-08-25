@@ -227,8 +227,11 @@
 <script>
     var timer;
     var roomName = {{ lm_name }};
+
+    /* Web socket for chatroom conversation */
     var chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chatroom/' + roomName + '/');
 
+    /* Add user side speech bubble into chat-area */
     function addLogFromUser(message) {
         var today = new Date();
         var time = today.getHours() + ":" + today.getMinutes();
@@ -242,12 +245,17 @@
         element.scrollTop = element.scrollHeight - element.clientHeight;
     }
 
+    /* Change url without reloading the entire page */
     function openPage(url) {
 
         history.pushState(null, null, url);			// changing the address without reload the page. [param: state, title, url]
 
         var encodedUrl = encodeURI(url);
 
+        /*
+         * 1. Enter the answer text from the LM into invisible div
+         * 2. Append the html code #chat-log area
+         */
         var $temp = $('#invisible').load(encodedUrl, function() {
             var today = new Date();
             var time = today.getHours() + ":" + today.getMinutes();

@@ -2,11 +2,11 @@ find "$subtitles_html" -name "*.php" -o -name "*.html" -o -name "*.jpg" -o -name
 
 do
 
-tempName=${filename}~temp~.txt
+tempName=${filename}~temp~.html
 
 mv "$filename" "$tempName"
 
-iconv -c -f euc-kr -t UTF-8 "$tempName" > "$filename"
+iconv -c -f cp949 -t UTF-8 "$tempName" > "$filename"
 
 rm "$tempName"
 
