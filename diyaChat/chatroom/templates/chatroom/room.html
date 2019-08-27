@@ -100,7 +100,7 @@
                                             </span>
                                             <div class="chat-body clearfix">
                                                 <div class="header_sec">
-                                                <strong class="primary-font">6월 5일의 대화</strong>
+                                                <strong class="primary-font">9월 5일의 대화</strong>
                                                 <strong class="pull-right">09:45AM</strong>
                                             </div>
 
@@ -116,7 +116,7 @@
                                             </span>
                                             <div class="chat-body clearfix">
                                                 <div class="header_sec">
-                                                    <strong class="primary-font">6월 3일의 대화</strong>
+                                                    <strong class="primary-font">9월 3일의 대화</strong>
                                                     <strong class="pull-right ">01:13AM</strong>
                                                 </div>
                                                 <div class="contact_sec">
@@ -131,7 +131,7 @@
                                             </span>
                                             <div class="chat-body clearfix">
                                                 <div class="header_sec">
-                                                    <strong class="primary-font">6월 1일의 대화</strong>
+                                                    <strong class="primary-font">9월 1일의 대화</strong>
                                                     <strong class="pull-right">2:08AM</strong>
                                                 </div>
                                                 <div class="contact_sec">
@@ -247,6 +247,11 @@
 
     /* Change url without reloading the entire page */
     function openPage(url) {
+        /* loading */
+        var today = new Date();
+        var time = today.getHours() + ":" + today.getMinutes();
+        $('#chat-log').append("<li class='temp_loading right clearfix'><span style='padding-left: 15px;'>DiyaChat</span><span class='chat-img1 pull-left'><a class='button' href='#popup1'><img src='../../static/chatroom/img/chatbot.png' alt='User Avatar' class='img-circle'></a></span><div class='chat-body2 clearfix'><p><img src='../../static/chatroom/img/icons/load.gif' alt='loading'></p><br><div class='chat_time pull-left'>"+ time +"</div></div></li>");
+
 
         history.pushState(null, null, url);			// changing the address without reload the page. [param: state, title, url]
 
@@ -257,8 +262,9 @@
          * 2. Append the html code #chat-log area
          */
         var $temp = $('#invisible').load(encodedUrl, function() {
-            var today = new Date();
-            var time = today.getHours() + ":" + today.getMinutes();
+            $('.temp_loading').remove();
+            //var today = new Date();
+            //var time = today.getHours() + ":" + today.getMinutes();
             $('#chat-log').append("<li class='right clearfix'><span style='padding-left: 15px;'>DiyaChat</span><span class='chat-img1 pull-left'><a class='button' href='#popup1'><img src='../../static/chatroom/img/chatbot.png' alt='User Avatar' class='img-circle'></a></span><div class='chat-body2 clearfix'><p>" + $temp.html() + "</p><br><div class='chat_time pull-left'>"+ time +"</div></div></li>");
             $('#chat_area').animate({scrollTop: $('#chat_area').prop("scrollHeight")}, 500);
         });

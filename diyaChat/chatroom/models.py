@@ -28,6 +28,7 @@ class Answer(models.Model):
 
 class Room(models.Model):
     # ex) seq2seq, transformer, BERT
+    # @TODO: epoch과 accuracy 추가할 것
     lm_name = models.CharField(max_length=20)    # the chatbot language model adopted to chatroom
     subtitle = models.CharField(max_length=80)
     description = models.CharField(max_length=200)
