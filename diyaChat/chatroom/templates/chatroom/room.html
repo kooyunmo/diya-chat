@@ -234,7 +234,10 @@
     /* Add user side speech bubble into chat-area */
     function addLogFromUser(message) {
         var today = new Date();
-        var time = today.getHours() + ":" + today.getMinutes();
+        hours = today.getHours();
+        minutes = (today.getMinutes() < 10) ? ("0" + today.getMinutes()) : (today.getMinutes());
+        var time = hours + ":" + minutes;
+
         $("#chat-log").append("<li class='left clearfix admin_chat'><div style='text-align:right; padding-right: 65px;'>나</div><div class='chat-body1 clearfix'><p style='text-align:right;''>" + message + "</p><br><div class='chat_time pull-right'>"+ time +"</div></div></li>");
         $('#chat_area').animate({scrollTop: $('#chat_area').prop("scrollHeight")}, 500);
     }
@@ -249,7 +252,10 @@
     function openPage(url) {
         /* loading */
         var today = new Date();
-        var time = today.getHours() + ":" + today.getMinutes();
+        hours = today.getHours();
+        minutes = (today.getMinutes() < 10) ? ("0" + today.getMinutes()) : (today.getMinutes());
+        var time = hours + ":" + minutes;
+
         $('#chat-log').append("<li class='temp_loading right clearfix'><span style='padding-left: 15px;'>DiyaChat</span><span class='chat-img1 pull-left'><a class='button' href='#popup1'><img src='../../static/chatroom/img/chatbot.png' alt='User Avatar' class='img-circle'></a></span><div class='chat-body2 clearfix'><p><img src='../../static/chatroom/img/icons/load.gif' alt='loading'></p><br><div class='chat_time pull-left'>"+ time +"</div></div></li>");
 
 
