@@ -500,3 +500,19 @@
     color: #ffffff;
     text-decoration: none;
 }
+
+
+.reviewContainer #surveyContainer {
+    padding: 0px 10px;
+}
+
+.reviewContainer #surveyContainer .current_question {
+    color: #0652DD;
+}
+
+
+.reviewContainer #surveyContainer .current_answer {
+    color: #5758BB;
+}
+
+
