@@ -59,6 +59,10 @@ def message(request, message, lm_name):
     # if lm_name == 'bert':
     #return HttpResponse("answer: %s" % (message))
 
+    if "너" in message and "이름" in message:
+        return HttpResponse("%s" % ("제 이름은 diya chat이에요 :)"))
+
+
     if lm_name == 'transformer':
         print(lm_name)
 
