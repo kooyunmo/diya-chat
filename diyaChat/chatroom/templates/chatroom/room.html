@@ -189,10 +189,10 @@
                             <div id="popup1" class="overlay">
                                 <div class="popup">
                                     <div>
-                                        <div class="assembleLogo"><img src="../../static/chatroom/img/github-logo.png"></div>
-                                        <h2>Contact Me!</h2>
+                                        <div class="githubLogo"><img src="../../static/chatroom/img/octocat.png"></div>
+                                        <h2>Contact Us!</h2>
                                     </div>
-                                    <h4>Hello, thank you for use our chatbot service. You can contact us through this link!</h4>
+                                    <h4>Thank you for use our chatbot service. You can contact us through this link!</h4>
                                     <a class="close" href="#">×</a>
                                     <div class="content">
                                         <a target="_blank" rel="noopener noreferrer" href="https://github.com/kooyunmo/">
@@ -203,28 +203,65 @@
                             </div>
 
 
+                            <div id="popup2" class="overlay">
+                                <div class="popup">
+                                    <div>
+                                        <div class="heartIcon"><img src="../../static/chatroom/img/heart.gif"></div>
+                                        <h2>Thank You!</h2>
+                                    </div>
+                                    <h4>감사합니다. 제공해주신 답변은 DIYA chatbot에게 큰 가르침이 될 것입니다.</h4>
+                                    <a class="close" href="#">×</a>
+                                    <div class="content">
+                                        <a target="_blank" rel="noopener noreferrer" href="https://github.com/kooyunmo/">
+                                            <p>Click here to visit my git repository!</p>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div id="popup3" class="overlay">
+                                <div class="popup">
+                                    <div>
+                                        <div class="errorIcon"><img src="../../static/chatroom/img/error.gif"></div>
+                                        <h2>Try Again!</h2>
+                                    </div>
+                                    <h4>새로운 답변을 먼저 입력해주세요!</h4>
+                                    <a class="close" href="#">×</a>
+                                </div>
+                            </div>
+
+
+
+                            <div id="popup4" class="overlay">
+                                <div class="popup">
+                                    <div>
+                                        <div class="errorIcon"><img src="../../static/chatroom/img/error.gif"></div>
+                                        <h2>Try Again!</h2>
+                                    </div>
+                                    <h4>채팅을 먼저 시작해주세요!</h4>
+                                    <a class="close" href="#">×</a>
+                                </div>
+                            </div>
+
+
+
+
                             <div class="message_write">
                                 <!-- <textarea class="form-control" placeholder="type a message"></textarea> -->
-                                <input id="chat-message-input" class="form-control" type="text" placeholder="type a message" />
+                                <input id="chat-message-input" class="form-control" type="text" placeholder="type a message" autocomplete="off"/>
                                 <div class="clearfix"></div>
                                 <div class="chat_bottom">
                                     <input id="chat-message-submit" class="pull-right btn btn-success" type="button" value="Send"/>
-                                </div>
-                            </div>
-                        </div>
 
 
-                        <!-- Review container -->
-                        <div class="row" style="margin-top:0px;">
-                            <div class="reviewContainer">
-                                <div class="well well-sm">
                                     <div class="text-right">
-                                        <a class="btn btn-success btn-green" href="#reviews-anchor" id="open-review-box">Teach DiyaChat</a>
+                                        <a class="btn btn-success btn-green" href="#reviews-anchor" id="open-review-box" style="margin:0px 10px;">Teach DiyaChat</a>
                                     </div>
 
                                     <div class="row" id="post-review-box" style="display:none;">
                                         <div class="col-md-12">
-                                            <form accept-charset="UTF-8" action="http://localhost:8000/" method="post">
+                                            <form id="correct-form" method="post" action="#">
                                                 {% csrf_token %}
                                                 <div id="surveyContainer">
 
@@ -235,7 +272,7 @@
                                                 </div>
 
 
-                                                <textarea class="form-control animated" cols="50" id="new-review" name="comment" placeholder="Enter your review here..." rows="5"></textarea>
+                                                <textarea class="form-control animated" cols="50" id="new-answer" name="comment" placeholder="Enter correct answer here..." rows="5"></textarea>
 
                                                 <div class="text-right">
                                                     <div class="stars starrr" data-rating="0"></div>
@@ -243,16 +280,15 @@
                                                         <span class="glyphicon glyphicon-remove"></span>
                                                         Cancel
                                                     </a>
-                                                    <button id="saveButton" class="btn btn-success btn-lg" type="submit">Save</button>
+                                                    <button id="saveButton" class="btn btn-success btn-lg" type="submit">Submit</button>
                                                 </div>
                                             </form>
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
-                        <!-- End of review container -->
+
 
                     </div>
                 </div><!--message_section-->
@@ -269,6 +305,7 @@
 <script>
     var timer;
     var roomName = {{ lm_name }};
+    var curr_question = "";
 
     /* Web socket for chatroom conversation */
     var chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chatroom/' + roomName + '/');
@@ -324,11 +361,14 @@
     chatSocket.onmessage = function(e) {
         var data = JSON.parse(e.data);
         var message = data['message'];
+
         //document.querySelector('#chat-log').value += (message + '\n');
         if(message.length > 0) {
             addLogFromUser(message);
 
             openPage(message);
+
+            curr_question = message;        // for new QA dataset provided by users
         }
     };
 
@@ -344,6 +384,7 @@
         }
     };
 
+
     document.querySelector('#chat-message-submit').onclick = function(e) {
         var messageInputDom = document.querySelector('#chat-message-input');
         var message = messageInputDom.value;
@@ -354,20 +395,71 @@
     };
 
 
+    /* submit the new QA pair submitted by users */
+    $(document).ready(function(){
+        $("form#correct-form").submit(function(event) {
+            event.preventDefault();
+
+            var question = "";
+            var answer = "";
+
+            question = curr_question;
+            answer = $("#new-answer").val();
+
+            /* if both question and answer are valid */
+            if(question.length > 0 && answer.length > 0) {
+                $.ajax({
+                    csrfmiddlewaretoken: "{{ csrf_token }}",
+                    type: 'POST',
+                    url: 'ajax/post_dataset/',
+                    data: {
+                        'question': question,
+                        'answer': answer
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        if(data.is_valid) {
+                            window.location.href="#popup2";
+                            //alert("감사합니다. 제공해주신 답변은 DIYA chatbot에게 큰 가르침이 될 것입니다.");
+                        }
+                        else {
+                            alert("Error occurs!");
+                        }
+                        $('#new-answer').val('');
+                    }
+                });
+            }
+            /* if either question or answer is not valid */
+            else {
+                if(question.length > 0) {
+                    window.location.href="#popup3";
+                    //alert("새로운 답변을 먼저 입력해주세요!");
+                }
+                else {
+                    window.location.href="#popup4";
+                    //alert("채팅을 먼저 시작해주세요!");
+                }
+            }
+        });
+    });
+
+
+
+
     /* review container jquery */
 
     $(function(){
-      	$('#new-review').autosize({append: "\n"});
+      	$('#new-answer').autosize({append: "\n"});
 
       	var reviewBox = $('#post-review-box');
-      	var newReview = $('#new-review');
+      	var newReview = $('#new-answer');
       	var openReviewBtn = $('#open-review-box');
       	var closeReviewBtn = $('#close-review-box');
       	var ratingsField = $('#ratings-hidden');
 
       	openReviewBtn.click(function(e) {
         	reviewBox.slideDown(400, function() {
-            	$('#new-review').trigger('autosize.resize');
+            	$('#new-answer').trigger('autosize.resize');
             	newReview.focus();
           	});
 	        openReviewBtn.fadeOut(100);

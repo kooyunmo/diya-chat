@@ -12,7 +12,8 @@ urlpatterns = [
    path('<str:lm_name>/', views.room, name='room'),
 
    #path('<str:lm_name>/<str:num>/', views.helloworld, name='helloworld'),
-
    path('<str:lm_name>/<str:message>/', views.message, name='message'),
 
+   # ex) /chatroom/newDataset
+   path('<str:lm_name>/ajax/post_dataset/', views.post_dataset, name='post_dataset'),
 ]

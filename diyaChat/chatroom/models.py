@@ -36,6 +36,10 @@ class Room(models.Model):
     rank = models.IntegerField(default=0)
     loss = models.FloatField(default=0)
 
-
     def __str__(self):
         return self.lm_name
+
+class UserInputDataset(models.Model):
+    question = models.CharField(max_length=100)
+    answer = models.CharField(max_length=100)
+

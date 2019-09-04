@@ -2,8 +2,13 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.utils.safestring import mark_safe
 from django.urls import reverse
+from django.views.generic.edit import CreateView
+from django.views.decorators.csrf import csrf_exempt
 
 from .models import Room
+from .models import UserInputDataset
+
+from .forms import DatasetPostForm
 
 import json
 
@@ -51,6 +56,24 @@ def room(request, lm_name):
 def detail(request, lm_name):
 
     return HttpResponse("You're looking at chatroom using %s." % lm_name)
+
+
+@csrf_exempt
+def post_dataset(request, lm_name):
+
+    question = request.POST.get('question', None)
+    answer = request.POST.get('answer', None)
+
+
+    new_dataset = UserInputDataset(question=question, answer=answer)       # save to DB
+    new_dataset.save()
+
+    data = {
+        'is_valid': 1
+    }
+
+    return JsonResponse(data)
+
 
 
 def message(request, message, lm_name):

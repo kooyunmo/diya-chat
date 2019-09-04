@@ -53,7 +53,7 @@
     padding: 2px 5px;
     position: absolute;
     right: 0;
-    z-index: 9999;
+    z-index: 9;
 }
 
 .search-query:focus+button {
@@ -197,7 +197,7 @@
 
 #chat_area {
     float: left;
-    height: 500px;
+    height: 450px;
     overflow-x: hidden;
     overflow-y: auto;
     width: 100%;
@@ -352,6 +352,13 @@
     opacity: 1;
 }
 
+#popup1,
+#popup2,
+#popup3,
+#popup4 {
+    z-index: 100;
+}
+
 .popup {
     margin: 70px auto;
     padding: 20px;
@@ -360,6 +367,7 @@
     width: 35%;
     position: relative;
     transition: all 5s ease-in-out;
+    text-align: center;
 }
 
 .popup h2 {
@@ -398,10 +406,20 @@
     }
 }
 
-.assembleLogo {
-    padding: 0 153px;
+.githubLogo {
+    padding: 10px 100px;
 }
 
+.heartIcon,
+.errorIcon {
+    padding: 10px 170px;
+}
+
+.heartIcon img,
+.errorIcon img,
+.githubLogo img {
+    width: 100%;
+}
 
 
 .card-pricing.popular {
@@ -502,16 +520,16 @@
 }
 
 
-.reviewContainer #surveyContainer {
+#surveyContainer {
     padding: 0px 10px;
 }
 
-.reviewContainer #surveyContainer .current_question {
+#surveyContainer .current_question {
     color: #0652DD;
 }
 
 
-.reviewContainer #surveyContainer .current_answer {
+#surveyContainer .current_answer {
     color: #5758BB;
 }
 
