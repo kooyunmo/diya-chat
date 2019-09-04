@@ -43,3 +43,6 @@ class UserInputDataset(models.Model):
     question = models.CharField(max_length=100)
     answer = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.question + " || "  + self.answer
+

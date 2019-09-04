@@ -68,6 +68,9 @@ def post_dataset(request, lm_name):
     new_dataset = UserInputDataset(question=question, answer=answer)       # save to DB
     new_dataset.save()
 
+    print("success to insert new QA dataset from the user")
+    print("Q: " + question + " || A: " + answer)
+
     data = {
         'is_valid': 1
     }
