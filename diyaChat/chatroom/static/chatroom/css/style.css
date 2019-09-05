@@ -13,6 +13,11 @@
     margin-bottom: 5px;
 }
 
+.mdl-layout__drawer-button:focus,
+.mdl-layout__header-row .logo:focus {
+    outline: none;
+}
+
 .mdl-layout__header-row .logo img {
     width: 80px;
 }
@@ -24,6 +29,7 @@
 
 .main_section .container {
     width: 100%;
+    font-family: 'Sunflower', sans-serif;
 }
 
 #custom-search-input {
@@ -201,6 +207,7 @@
     overflow-x: hidden;
     overflow-y: auto;
     width: 100%;
+    font-family: 'Poor Story', cursive;
 }
 
 #chat_area li {
@@ -260,6 +267,7 @@
     float: left;
     padding: 15px;
     width: 100%;
+    font-family: 'Sunflower', sans-serif;
 }
 
 .message_write textarea.form-control {
@@ -421,6 +429,13 @@
     width: 100%;
 }
 
+.card-pricing {
+    font-family: 'Libre Baskerville', serif;
+}
+
+.card-pricing .model-name {
+    font-family: 'Lobster', cursive;
+}
 
 .card-pricing.popular {
     z-index: 1;
@@ -436,7 +451,7 @@
 #slides {
     height: 400px;
     margin: auto;
-    top: 20px;
+    top: 10px;
 }
 
 #slides .overlay {
@@ -477,6 +492,7 @@
     z-index: 5;
     text-align: center;
     margin-top: -125px;
+    font-family: 'Lobster', cursive;
 }
 
 .titleMessage .heading p {
@@ -513,10 +529,18 @@
     width: 50px;
 }
 
+.mdl-layout__drawer .logo:focus {
+    outline: none;
+}
+
 
 .mdl-layout__drawer #logoNameContainer .mdl-navigation .mdl-navigation__link {
     color: #ffffff;
     text-decoration: none;
+}
+
+.mdl-navigation {
+    font-family: 'Libre Baskerville', serif;
 }
 
 
