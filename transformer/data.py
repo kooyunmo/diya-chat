@@ -1,4 +1,4 @@
-from konlpy.tag import Twitter
+from konlpy.tag import Okt
 import pandas as pd
 import tensorflow as tf
 import enum
@@ -34,16 +34,15 @@ sklearn.model_selection.train_test_split
 '''
 
 def load_data():
-    # 판다스를 통해서 데이터를 불러온다.
     data_df = pd.read_csv(DEFINES.data_path, header=0)
 
-    # 질문과 답변 열을 가져와 question과 answer에 넣는다.
+    # get Q and A form csv file
     question, answer = list(data_df['Q']), list(data_df['A'])
 
-    # skleran에서 지원하는 함수를 통해서 학습 셋과 테스트 셋을 나눈다.
+    # split dataset into trainset and testset (by sklearn function: train_test_split)
     train_input, eval_input, train_label, eval_label = train_test_split(question, answer, test_size=0.33,
                                                                         random_state=42)
-    # 그 값을 리턴한다.
+
     return train_input, train_label, eval_input, eval_label
 
 
@@ -54,7 +53,7 @@ tqdm
 '''
 def prepro_like_morphlized(data):
     # 형태소 분석 모듈 객체를 생성
-    morph_analyzer = Twitter()
+    morph_analyzer = Okt()
 
     # 형태소 토크나이즈 결과 문장을 받을 리스트를 생성합니다.
     result_data = list()
@@ -73,9 +72,9 @@ def prepro_like_morphlized(data):
 def enc_processing(value, dictionary):
     # 인덱스 값들을 가지고 있는 배열이다.(누적된다.)
     sequences_input_index = []
-    # 하나의 인코딩 되는 문장의
-    # 길이를 가지고 있다.(누적된다.)
+    # 하나의 인코딩 되는 문장의 길이를 가지고 있다.(누적된다.)
     sequences_length = []
+
     # 형태소 토크나이징 사용 유무
     if DEFINES.tokenize_as_morph:
         value = prepro_like_morphlized(value)
@@ -125,17 +124,17 @@ def dec_output_processing(value, dictionary):
     # 하나의 디코딩 입력 되는 문장의
     # 길이를 가지고 있다.(누적된다)
     sequences_length = []
+
     # 형태소 토크나이징 사용 유무
     if DEFINES.tokenize_as_morph:
         value = prepro_like_morphlized(value)
+
     # 한줄씩 불어온다.
     for sequence in value:
         # FILTERS = "([~.,!?\"':;)(])"
-        # 정규화를 사용하여 필터에 들어 있는
-        # 값들을 "" 으로 치환 한다.
+        # 정규화를 사용하여 필터에 들어 있는 값들을 "" 으로 치환 한다.
         sequence = re.sub(CHANGE_FILTER, "", sequence)
-        # 하나의 문장을 디코딩 할때 가지고
-        # 있기 위한 배열이다.
+        # 하나의 문장을 디코딩 할때 가지고 있기 위한 배열이다.
         sequence_index = []
 
         # 디코딩 입력의 처음에는 START가 와야 하므로 그 값을 넣어 주고 시작한다.

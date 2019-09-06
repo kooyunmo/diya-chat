@@ -338,6 +338,7 @@
         minutes = (today.getMinutes() < 10) ? ("0" + today.getMinutes()) : (today.getMinutes());
         var time = hours + ":" + minutes;
 
+        $('.temp_loading').remove();
         $('#chat-log').append("<li class='temp_loading right clearfix'><span style='padding-left: 15px;'>DiyaChat</span><span class='chat-img1 pull-left'><a class='button' href='#popup1'><img src='../../static/chatroom/img/chatbot.png' alt='User Avatar' class='img-circle'></a></span><div class='chat-body2 clearfix'><p><img src='../../static/chatroom/img/icons/load.gif' alt='loading'></p><br><div class='chat_time pull-left'>"+ time +"</div></div></li>");
 
 
