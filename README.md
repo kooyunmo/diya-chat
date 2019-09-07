@@ -61,10 +61,11 @@
     ```
       sudo docker run -p 6379:6379 -d redis
     ```
-* django server 실행
+* Run django server
   ```
     $ python manage.py runserver
   ```
+  - After entering the command above, go to your web brower and go to the link(http://localhost:8000/)
 
 * Setup sqlite DB
   ```
