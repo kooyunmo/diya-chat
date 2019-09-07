@@ -10,13 +10,13 @@
     + The data is provided by this github link: https://github.com/songys/Chatbot_data
 - We tried to train various language model using this Korean chatbot data.
 
-### LMs used in this project
+#### LMs used in this project
 
 1. BERT(by fine-tuning pretrained model: KorBERT)
 2. Transformer (based on Attention is all you need)
 3. Sequence to sequence with attention mechanism
 
-### Data
+#### Data
 
 - We create new Q-A data set with the movie subtitles
 - The movie subtitle data came from https://www.gomlab.com/subtitle/
