@@ -1,5 +1,6 @@
 # KoreanChatbot
-Korean chatbot with various language models
+**Korean chatbot with various language models. This chatbot runs on the local Django website, which will be incorporated to the official [DIYA(Do It Yourself AI) webpage](diyaml.com)**
+
 
 
 ## 1. Overview
@@ -39,7 +40,7 @@ Korean chatbot with various language models
 * How to install and set packages
   - Install requirements
     ```
-    pip install -r requirements.txt
+    $ pip install -r requirements.txt
     $ sudo pip install [package_name] --upgrade   # update packages
     ```
 
@@ -51,7 +52,9 @@ Korean chatbot with various language models
 * Run docker redis server (for chatting)
   - Installation
     1. Install docker
-      - `$ brew install Docker`
+    ```
+    $ brew install Docker
+    ```
     2. docker pull redis
 
   - Run
