@@ -13,6 +13,7 @@ Korean chatbot with various language models
 
 1. BERT(by fine-tuning pretrained model: KorBERT)
 2. Transformer (based on Attention is all you need)
+3. Sequence to sequence with attention mechanism
 
 ### Data
 
@@ -22,32 +23,51 @@ Korean chatbot with various language models
 
 ## 2. Install and Run
 
-* 파이썬 가상환경 설정(https://tutorial.djangogirls.org/ko/django_installation/)
+* How to set virtualenv
+  ```
+  # Install
+  $ sudo apt-get install python3-virtualenv   # for linux
+  $ pip install virtualenv                    # for mac / windows
+
+  # Run
+  $ virtualenv --python=python3 diyachat-env
+  $ source diyachat-env/bin/activate
+  ```
+  - For more detail: https://tutorial.djangogirls.org/ko/django_installation/
 
 
-* 패키지 관리
-  - 패키지 설치
+* How to install and set packages
+  - Install requirements
     ```
     pip install -r requirements.txt
-    sudo pip install [package_name] --upgrade   # 패키지 업데이트
+    $ sudo pip install [package_name] --upgrade   # update packages
     ```
-  - 현재 패키지 설정 requirements.txt에 기록
-    ```
-    pip freeze > requirements.txt
-    ```
-* docker redis server 실행 (채팅 기능)
-  ```
-  # 설치
-  brew install Docker 후에 홈페이지에서 도커 데스크탑 파일을 다운받아서 설치
-  docker version으로 설치 확인
-  docker pull redis
 
-  # 실행
-  sudo docker run -p 6379:6379 -d redis
-  ```
+  - Save current packages into requirements.txt
+    ```
+    $ pip freeze > requirements.txt
+    ```
+
+* Run docker redis server (for chatting)
+  - Installation
+    1. Install docker
+      - `$ brew install Docker`
+    2. docker pull redis
+
+  - Run
+    ```
+      sudo docker run -p 6379:6379 -d redis
+    ```
 * django server 실행
   ```
-  python manage.py runserver
+    $ python manage.py runserver
   ```
 
-* DB Browser for sqlite 사용하여 DB 관리
+* Setup sqlite DB
+  ```
+    $ python manage.py makemigrations
+    $ python manage.py migrate
+  ```
+  - If you want to reset the whole DB, you need to delete `db.sqlite3` file and follow the process above again
+  - For more detail check [Djang tutorial: PART2](https://docs.djangoproject.com/ko/2.2/intro/tutorial02/)
+
