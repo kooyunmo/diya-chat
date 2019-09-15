@@ -28,11 +28,9 @@ if __name__ == '__main__':
 
     print(input)
     predic_input_enc, predic_input_enc_length = data.enc_processing([input], char2idx)
-    # 학습 과정이 아니므로 디코딩 입력은
-    # 존재하지 않는다.(구조를 맞추기 위해 넣는다.)
+    # 학습 과정이 아니므로 디코딩 입력은 존재하지 않는다.(구조를 맞추기 위해 넣는다.)
     predic_output_dec, predic_output_dec_length = data.dec_output_processing([""], char2idx)
-    # 학습 과정이 아니므로 디코딩 출력 부분도
-    # 존재하지 않는다.(구조를 맞추기 위해 넣는다.)
+    # 학습 과정이 아니므로 디코딩 출력 부분도 존재하지 않는다.(구조를 맞추기 위해 넣는다.)
     predic_target_dec = data.dec_target_processing([""], char2idx)
 
     # 에스티메이터 구성한다.
@@ -59,6 +57,7 @@ if __name__ == '__main__':
             predic_output_dec, predic_output_decLength = data.dec_output_processing([answer], char2idx)
             predic_target_dec = data.dec_target_processing([answer], char2idx)
         # 예측을 하는 부분이다.
+        # input_fn : A function that constructs the features. Prediction continues until input_fn raises an end-of-input exception (tf.errors.OutOfRangeError or StopIteration).
         predictions = classifier.predict(
             input_fn=lambda: data.eval_input_fn(predic_input_enc, predic_output_dec, predic_target_dec, 1))
 

@@ -300,7 +300,7 @@ def pred_next_string(index_sequences, dictionary):
     '''
     @params
         - index_sequences: 인덱스로 표현된 sentences
-            + ex) ex) [13042, 15055, 11881, 12337, 0, 0, ...] 와 같은 배열 여러 개
+            + ex) [13042, 15055, 11881, 12337, 0, 0, ...] 와 같은 배열 여러 개
         - dictionary: key(index)-value(word) pair
 
     @return

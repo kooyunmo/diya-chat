@@ -15,8 +15,8 @@ DATA_OUT_PATH = './data_out/'
 def main(self):
     data_out_path = os.path.join(os.getcwd(), DATA_OUT_PATH)
     os.makedirs(data_out_path, exist_ok=True)
-    # 데이터를 통한 사전 구성 한다.
 
+    # 데이터를 통한 사전 구성 한다.
     char2idx, idx2char, vocabulary_length = data.load_vocabulary()
     # 훈련 데이터와 테스트 데이터를 가져온다.
     train_input, train_label, eval_input, eval_label = data.load_data()
@@ -35,14 +35,10 @@ def main(self):
     # 평가셋 인코딩 만드는 부분이다.
     eval_target_dec = data.dec_target_processing(eval_label, char2idx)
 
-    # 현재 경로'./'에 현재 경로 하부에
-    # 체크 포인트를 저장한 디렉토리를 설정한다.
+    # 현재 경로'./'에 현재 경로 하부에 체크 포인트를 저장한 디렉토리를 설정한다.
     check_point_path = os.path.join(os.getcwd(), DEFINES.check_point_path)
-    # 디렉토리를 만드는 함수이며 두번째 인자 exist_ok가
-    # True이면 디렉토리가 이미 존재해도 OSError가
-    # 발생하지 않는다.
-    # exist_ok가 False이면 이미 존재하면
-    # OSError가 발생한다.
+    # 디렉토리를 만드는 함수이며 두번째 인자 exist_ok가 True이면 디렉토리가 이미 존재해도 OSError가 발생하지 않는다.
+    # exist_ok가 False이면 이미 존재하면 OSError가 발생한다.
     os.makedirs(check_point_path, exist_ok=True)
 
     # 에스티메이터 구성한다.
@@ -70,15 +66,19 @@ def main(self):
         eval_input_enc, eval_output_dec, eval_target_dec, DEFINES.batch_size))
     print('\nEVAL set accuracy: {accuracy:0.3f}\n'.format(**eval_result))
 
+
+    ######################## Inferencing Test #########################
+
     # 테스트용 데이터 만드는 부분이다.
     # 인코딩 부분 만든다.
-    predic_input_enc, predic_input_enc_length = data.enc_processing(["가끔 궁금해"], char2idx)
-    # 학습 과정이 아니므로 디코딩 입력은
-    # 존재하지 않는다.(구조를 맞추기 위해 넣는다.)
+    predic_input_enc, predic_input_enc_length = data.enc_processing(["안녕 반가워"], char2idx)
+    # 학습 과정이 아니므로 디코딩 입력은 존재하지 않는다.(구조를 맞추기 위해 넣는다.)
     predic_output_dec, predic_output_decLength = data.dec_output_processing([""], char2idx)
     # 학습 과정이 아니므로 디코딩 출력 부분도
     # 존재하지 않는다.(구조를 맞추기 위해 넣는다.)
     predic_target_dec = data.dec_target_processing([""], char2idx)
+
+    answer = ""
 
     for i in range(DEFINES.max_sequence_length):
         if i > 0:

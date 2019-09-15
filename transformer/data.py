@@ -10,6 +10,7 @@ from configs import DEFINES
 
 from tqdm import tqdm
 
+################## global variables ##################
 
 FILTERS = "([~.,!?\"':;)(])"
 PAD = "<PAD>"
@@ -25,6 +26,8 @@ UNK_INDEX = 3
 MARKER = [PAD, STD, END, UNK]
 CHANGE_FILTER = re.compile(FILTERS)
 
+############### end of global variables ##############
+
 '''
 sklearn.model_selection.train_test_split
 
@@ -34,6 +37,16 @@ sklearn.model_selection.train_test_split
 '''
 
 def load_data():
+    '''
+    1. Read Korean chatbot data(Q-A pairs) from the path, and put them into pd.DataFrame.
+    2. split data into training set and validation set, and return them.
+
+    @return
+        - train_input: training question
+        - train_label: training answer
+        - test_input: test question
+        - test_label: test answer
+    '''
     data_df = pd.read_csv(DEFINES.data_path, header=0)
 
     # get Q and A form csv file
@@ -46,16 +59,12 @@ def load_data():
     return train_input, train_label, eval_input, eval_label
 
 
-
-'''
-tqdm
-    for문의 진행 상태를 보여주는 상태바 시각화 라이브러리
-'''
+# This function will not be used
 def prepro_like_morphlized(data):
     # 형태소 분석 모듈 객체를 생성
     morph_analyzer = Okt()
 
-    # 형태소 토크나이즈 결과 문장을 받을 리스트를 생성합니다.
+    # 형태소 토크나이즈 결과 문장을 받을 리스트를 생성
     result_data = list()
     # 데이터에 있는 매 문장에 대해 토크나이즈를 할 수 있도록 반복문을 선언합니다.
     for seq in tqdm(data):
@@ -68,8 +77,16 @@ def prepro_like_morphlized(data):
 
 
 
-# 인덱스화 할 value와 키가 워드이고 값이 인덱스인 딕셔너리를 받는다.
 def enc_processing(value, dictionary):
+    '''
+    @params
+        - input_data: 인덱싱할 데이터 (train_input 또는 test_input)
+        - dictionary: key(word)-value(index) pair
+
+    @return
+        - index sequences로 변환된 input_data의 words sequences
+            + ex) [13042, 15055, 11881, 12337, 0, 0, ...]
+    '''
     # 인덱스 값들을 가지고 있는 배열이다.(누적된다.)
     sequences_input_index = []
     # 하나의 인코딩 되는 문장의 길이를 가지고 있다.(누적된다.)
@@ -79,7 +96,7 @@ def enc_processing(value, dictionary):
     if DEFINES.tokenize_as_morph:
         value = prepro_like_morphlized(value)
 
-    # 한줄씩 불어온다.
+    # 한줄씩 불러온다.
     for sequence in value:
         # FILTERS = "([~.,!?\"':;)(])"
         # 정규화를 사용하여 필터에 들어 있는 값들을 "" 으로 치환 한다.
@@ -97,11 +114,11 @@ def enc_processing(value, dictionary):
             else:
                 sequence_index.extend([dictionary[UNK]])
 
-        # 문장 제한 길이보다 길어질 경우 뒤에 토큰을 자르고 있다.
+        # 문장 제한 길이보다 길어질 경우 뒤에 토큰을 자른다.
         if len(sequence_index) > DEFINES.max_sequence_length:
             sequence_index = sequence_index[:DEFINES.max_sequence_length]
 
-        # 하나의 문장에 길이를 넣어주고 있다.
+        # 하나의 문장의 길이를 넣어주고 있다.
         sequences_length.append(len(sequence_index))
 
         # max_sequence_length보다 문장 길이가 작다면 빈 부분에 PAD(0)를 넣어준다.
@@ -116,20 +133,26 @@ def enc_processing(value, dictionary):
     return np.asarray(sequences_input_index), sequences_length
 
 
-# 인덱스화 할 value 키가 워드 이고 값이 인덱스인 딕셔너리를 받는다.
 def dec_output_processing(value, dictionary):
-    # 인덱스 값들을 가지고 있는
-    # 배열이다.(누적된다)
+    '''
+    @params
+        - input_data: 인덱싱할 데이터 (train_input 또는 test_input)
+        - dictionary: key(word)-value(index) pair
+
+    @return
+        - index sequences로 변환된 words sequences
+    '''
+
+    # 인덱스 값들을 가지고 있는 배열이다.(누적된다)
     sequences_output_index = []
-    # 하나의 디코딩 입력 되는 문장의
-    # 길이를 가지고 있다.(누적된다)
+    # 하나의 디코딩 입력 되는 문장의 길이를 가지고 있다.(누적된다)
     sequences_length = []
 
-    # 형태소 토크나이징 사용 유무
+    # 형태소 토크나이징 사용 유무 (여기에선 사용하지 않음)
     if DEFINES.tokenize_as_morph:
         value = prepro_like_morphlized(value)
 
-    # 한줄씩 불어온다.
+    # 한줄씩 불러온다.
     for sequence in value:
         # FILTERS = "([~.,!?\"':;)(])"
         # 정규화를 사용하여 필터에 들어 있는 값들을 "" 으로 치환 한다.
@@ -148,40 +171,43 @@ def dec_output_processing(value, dictionary):
         # 하나의 문장에 길이를 넣어주고 있다.
         sequences_length.append(len(sequence_index))
 
-        # max_sequence_length보다 문장 길이가
-        # 작다면 빈 부분에 PAD(0)를 넣어준다.
+        # max_sequence_length보다 문장 길이가 작다면 빈 부분에 PAD(0)를 넣어준다.
         sequence_index += (DEFINES.max_sequence_length - len(sequence_index)) * [dictionary[PAD]]
-        # 인덱스화 되어 있는 값을
-        # sequences_output_index 넣어 준다.
+        # 인덱스화 되어 있는 값을 sequences_output_index 넣어 준다.
         sequences_output_index.append(sequence_index)
     # 인덱스화된 일반 배열을 넘파이 배열로 변경한다.
-    # 이유는 텐서플로우 dataset에 넣어 주기 위한
-    # 사전 작업이다.
+    # 이유는 텐서플로우 dataset에 넣어 주기 위한 사전 작업이다.
     # 넘파이 배열에 인덱스화된 배열과 그 길이를 넘겨준다.
     return np.asarray(sequences_output_index), sequences_length
 
 
-# 인덱스화 할 value와 키가 워드 이고
-# 값이 인덱스인 딕셔너리를 받는다.
+
 def dec_target_processing(value, dictionary):
-    # 인덱스 값들을 가지고 있는
-    # 배열이다.(누적된다)
+    '''
+    @params
+        - input_data: 인덱싱할 데이터 (train_input 또는 test_input)
+        - dictionary: key(word)-value(index) pair
+
+    @return
+        - index sequences로 변환된 words sequences
+    '''
+
+    # 인덱스 값들을 가지고 있는 배열이다.(누적된다)
     sequences_target_index = []
-    # 형태소 토크나이징 사용 유무
+    # 형태소 토크나이징 사용 유무 (여기선 사용하지 않음)
     if DEFINES.tokenize_as_morph:
         value = prepro_like_morphlized(value)
-    # 한줄씩 불어온다.
+    # 한줄씩 불러온다.
     for sequence in value:
         # FILTERS = "([~.,!?\"':;)(])"
-        # 정규화를 사용하여 필터에 들어 있는
-        # 값들을 "" 으로 치환 한다.
+        # 정규화를 사용하여 필터에 들어 있는 값들을 "" 으로 치환 한다.
         sequence = re.sub(CHANGE_FILTER, "", sequence)
 
         # 문장에서 스페이스 단위별로 단어를 가져와서 딕셔너리의 값인 인덱스를 넣어 준다.
         # 디코딩 출력의 마지막에 END를 넣어 준다.
         sequence_index = [dictionary[word] for word in sequence.split()]
 
-        # 문장 제한 길이보다 길어질 경우 뒤에 토큰을 자르고 있다.
+        # 문장 제한 길이보다 길어질 경우 뒤에 토큰을 자른다.
         # 그리고 END 토큰을 넣어 준다
         if len(sequence_index) >= DEFINES.max_sequence_length:
             sequence_index = sequence_index[:DEFINES.max_sequence_length - 1] + [dictionary[END]]
@@ -201,10 +227,19 @@ def dec_target_processing(value, dictionary):
 
 
 # 인덱스를 스트링으로 변경하는 함수이다.
-# 바꾸고자 하는 인덱스 value와 인덱스를
-# 키로 가지고 있고 값으로 단어를 가지고 있는
-# 딕셔너리를 받는다.
+# 바꾸고자 하는 인덱스 value와 인덱스를 키로 가지고 있고 값으로 단어를 가지고 있는 딕셔너리를 매개변수로 받는다.
 def pred2string(value, dictionary):
+    '''
+    @params
+        - index_sequences: 인덱스로 표현된 sentences
+            + ex) ex) [13042, 15055, 11881, 12337, 0, 0, ...] 와 같은 배열 여러 개
+        - dictionary: key(index)-value(word) pair
+
+    @return
+        - answer: 단어들로 구성된 문장을 반환
+        - is_finished: terminate condition
+    '''
+
     # 텍스트 문장을 보관할 배열을 선언한다.
     sentence_string = []
     # print(value)
@@ -292,45 +327,46 @@ def train_input_fn(train_input_enc, train_output_dec, train_target_dec, batch_si
 
 # 평가에 들어가 배치 데이터를 만드는 함수이다.
 def eval_input_fn(eval_input_enc, eval_output_dec, eval_target_dec, batch_size):
-    # Dataset을 생성하는 부분으로써 from_tensor_slices부분은
-    # 각각 한 문장으로 자른다고 보면 된다.
-    # eval_input_enc, eval_output_dec, eval_target_dec
-    # 3개를 각각 한문장으로 나눈다.
+    # Dataset을 생성하는 부분으로써 from_tensor_slices부분은 각각 한 문장으로 자른다고 보면 된다.
+    # eval_input_enc, eval_output_dec, eval_target_dec 3개를 각각 한문장으로 나눈다.
     dataset = tf.data.Dataset.from_tensor_slices((eval_input_enc, eval_output_dec, eval_target_dec))
+
     # 전체 데이터를 섞는다.
     dataset = dataset.shuffle(buffer_size=len(eval_input_enc))
+
     # 배치 인자 값이 없다면  에러를 발생 시킨다.
     assert batch_size is not None, "eval batchSize must not be None"
-    # from_tensor_slices를 통해 나눈것을
-    # 배치크기 만큼 묶어 준다.
+
+    # from_tensor_slices를 통해 나눈것을 배치크기 만큼 묶어 준다.
     dataset = dataset.batch(batch_size, drop_remainder=True)
-    # 데이터 각 요소에 대해서 rearrange 함수를
-    # 통해서 요소를 변환하여 맵으로 구성한다.
+
+    # 데이터 각 요소에 대해서 rearrange 함수를 통해서 요소를 변환하여 맵으로 구성한다.
     dataset = dataset.map(rearrange)
-    # repeat()함수에 원하는 에포크 수를 넣을수 있으면
+
+    # repeat()함수에 원하는 에포크 수를 넣을 수 있음
     # 아무 인자도 없다면 무한으로 이터레이터 된다.
     # 평가이므로 1회만 동작 시킨다.
     dataset = dataset.repeat(1)
-    # make_one_shot_iterator를 통해
-    # 이터레이터를 만들어 준다.
+
+    # make_one_shot_iterator를 통해 이터레이터를 만들어 준다.
     iterator = dataset.make_one_shot_iterator()
-    # 이터레이터를 통해 다음 항목의
-    # 텐서 개체를 넘겨준다.
+
+    # 이터레이터를 통해 다음 항목의 텐서 개체를 넘겨준다.
     return iterator.get_next()
 
 
+# helper for load_vacabulary()
 def data_tokenizer(data):
     # 토크나이징 해서 담을 배열 생성
     words = []
     for sentence in data:
         # FILTERS = "([~.,!?\"':;)(])"
-        # 위 필터와 같은 값들을 정규화 표현식을
-        # 통해서 모두 "" 으로 변환 해주는 부분이다.
+        # 위 필터와 같은 값들을 정규화 표현식을 통해서 모두 "" 으로 변환 해주는 부분이다.
         sentence = re.sub(CHANGE_FILTER, "", sentence)
         for word in sentence.split():
             words.append(word)
-    # 토그나이징과 정규표현식을 통해 만들어진
-    # 값들을 넘겨 준다.
+
+    # 토그나이징과 정규표현식을 통해 만들어진 값들을 넘겨 준다.
     return [word for word in words if word]
 
 
