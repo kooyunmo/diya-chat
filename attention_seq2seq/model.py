@@ -6,25 +6,36 @@ from configs import DEFINES
 
 
 def make_lstm_cell(mode, hiddenSize, index):
+    '''
+    @params:
+        - mode: TRAIN | EVAL | PREDICT
+        - hiddenSize: dimension of LSTM cell
+        - index: LSTM cell index number (여러개의 LSTM 셀 중에 몇 번째인지)
+
+    참고) tf.nn.rnn_cell에는 rnn 셀 관련 여러 모듈이 있음
+    '''
     cell = tf.nn.rnn_cell.BasicLSTMCell(hiddenSize, name="lstm" + str(index), state_is_tuple=False)
+
+    # 학습 단계일 경우에만 dropout 적용 (regularization purpose)
     if mode == tf.estimator.ModeKeys.TRAIN:
         cell = tf.contrib.rnn.DropoutWrapper(cell, output_keep_prob=DEFINES.dropout_width)
     return cell
 
-# 에스티메이터 모델 부분이다.
-# features : tf.data.Dataset.map을 통해서 만들어짐
-#       - features = {"input": input, "length": length}
-# labels : tf.data.Dataset.map을 통해서 만들어진 target
-# mode는 에스티메이터 함수를 호출하면 에스티메이터 프레임워크 모드의 값이 해당 부분이다.
-# params : 에스티메이터를 구성할때 params 값들이다.
-# (params={ # 모델 쪽으로 파라메터 전달한다.)
+
+
 def Model(features, labels, mode, params):
+    '''
+    @params
+        - features: tf.data.Dataset.map을 통해 구성된 {"input": input, "length": length} 형태의 dictionary
+        - labels: target(true label)
+        - mode: tf.estimator.ModeKey (TRAIN | EVAL | PREDICT)
+        - params: hyperparameters
+    '''
     TRAIN = mode == tf.estimator.ModeKeys.TRAIN
     EVAL = mode == tf.estimator.ModeKeys.EVAL
     PREDICT = mode == tf.estimator.ModeKeys.PREDICT
 
-    # 미리 정의된  임베딩 사용 유무를 확인 한다.
-    # 값이 True이면 임베딩을 해서 학습하고 False이면 onehotencoding 처리 한다.
+    # Use embedding
     if params['embedding'] == True:
         # 가중치 행렬에 대한 초기화 함수이다.
         # xavier (Xavier Glorot와 Yoshua Bengio (2010)
@@ -36,23 +47,21 @@ def Model(features, labels, mode, params):
                                            dtype=tf.float32,  # 타입
                                            initializer=initializer,  # 초기화 값
                                            trainable=True)  # 학습 유무
+
+    # One-hot vector
     else:
-        # tf.eye를 통해서 사전의 크기 만큼의 단위행렬
-        # 구조를 만든다.
+        # tf.eye를 통해서 사전의 크기 만큼의 단위행렬 구조를 만든다.
         embedding_encoder = tf.eye(num_rows=params['vocabulary_length'], dtype=tf.float32)
         # 인코딩 변수를 선언하고 값을 설정한다.
         embedding_encoder = tf.get_variable(name="embedding_encoder",  # 이름
                                            initializer=embedding_encoder,  # 초기화 값
                                            trainable=False)  # 학습 유무
 
-    # embedding_lookup을 통해서 features['input']의 인덱스를
-    # 위에서 만든 embedding_encoder의 인덱스의 값으로 변경하여
-    # 임베딩된 디코딩 배치를 만든다.
+    # embedding_lookup을 통해서 features['input']의 인덱스를 위에서 만든 embedding_encoder의 인덱스의 값으로 변경
+    # => 임베딩된 디코딩 배치 구성
     embedding_encoder_batch = tf.nn.embedding_lookup(params=embedding_encoder, ids=features['input'])
 
-    # 미리 정의된  임베딩 사용 유무를 확인 한다.
-    # 값이 True이면 임베딩을 해서 학습하고 False이면
-    # onehotencoding 처리 한다.
+
     if params['embedding'] == True:
         # 가중치 행렬에 대한 초기화 함수이다.
         # xavier (Xavier Glorot와 Yoshua Bengio (2010)
@@ -72,6 +81,7 @@ def Model(features, labels, mode, params):
         embedding_decoder = tf.get_variable(name='embedding_decoder',  # 이름
                                            initializer=embedding_decoder,  # 초기화 값
                                            trainable=False)  # 학습 유무
+
 
     # 변수 재사용을 위해서 reuse=.AUTO_REUSE를 사용하며 범위를
     # 정해주고 사용하기 위해 scope설정을 한다.

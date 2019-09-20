@@ -53,8 +53,7 @@ def load_data():
     question, answer = list(data_df['Q']), list(data_df['A'])
 
     # split dataset into trainset and testset (by sklearn function: train_test_split)
-    train_input, eval_input, train_label, eval_label = train_test_split(question, answer, test_size=0.33,
-                                                                        random_state=42)
+    train_input, eval_input, train_label, eval_label = train_test_split(question, answer, test_size=0.33, random_state=42)
 
     return train_input, train_label, eval_input, eval_label
 
@@ -288,11 +287,19 @@ def pred_next_string(value, dictionary):
             answer += word
             answer += " "
 
-    # 결과를 출력한다.
     return answer, is_finished
 
 
 def rearrange(input, output, target):
+    '''
+    @params:
+        - input: encoder input
+        - output: decoder input
+        - target: true label (will be used to calculate loss)
+    @return:
+        - features (dictionary containing encoder input and decoder input)
+        - target
+    '''
     features = {"input": input, "output": output}
     return features, target
 
