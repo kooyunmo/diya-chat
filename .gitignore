@@ -127,6 +127,7 @@ pickle/
 
 # ignore pretrained checkpoints
 korean_pretrained_model/
+bert/
 
 
 # korean chatbot data_in

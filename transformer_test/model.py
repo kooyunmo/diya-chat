@@ -118,22 +118,12 @@ def decoder(inputs, encoder_outputs, model_dim, ffn_dim, heads, num_layers):
 
 
 def Model(features, labels, mode, params):
-    '''
-    @params:
-        - features: {'input':'encoder input', 'output': decoder output} 형태의 dictionary
-        - labels: decoder target
-        - mode: tf.estimator,ModeKeys (TRAIN | EVAL | PREDICT)
-        - params: hyperparameteres in configs.py
-    '''
     TRAIN = mode == tf.estimator.ModeKeys.TRAIN
     EVAL = mode == tf.estimator.ModeKeys.EVAL
     PREDICT = mode == tf.estimator.ModeKeys.PREDICT
 
-    ##### Input embedding #####
-
     position_encode = positional_encoding(params['embedding_size'], params['max_sequence_length'])
 
-    # Set embedding options
     if params['xavier_initializer']:
         embedding_initializer = 'glorot_normal'
     else:
@@ -143,26 +133,19 @@ def Model(features, labels, mode, params):
                                           params['embedding_size'],
                                           embeddings_initializer=embedding_initializer)
 
-    # Apply embedding to encoder input and decoder input
     x_embedded_matrix = embedding(features['input']) + position_encode
     y_embedded_matrix = embedding(features['output']) + position_encode
 
-    # put embedded inputs to encoder and decoder
     encoder_outputs = encoder(x_embedded_matrix, params['model_hidden_size'], params['ffn_hidden_size'],
                               params['attention_head_size'], params['layer_size'])
     decoder_outputs = decoder(y_embedded_matrix, encoder_outputs, params['model_hidden_size'],
                               params['ffn_hidden_size'],
                               params['attention_head_size'], params['layer_size'])
 
-    # get the output made by decoder
-    # Appy Dense layer to make the size of output dimension to the size of total vocabs.
     logits = tf.keras.layers.Dense(params['vocabulary_length'])(decoder_outputs)
 
-    # Get the maximum index among the decoder output vector
     predict = tf.argmax(logits, 2)
 
-    # If it is prediction phase, process of getting loss and optimizing is not required
-    # Just return estimator object
     if PREDICT:
         predictions = {
             'indexs': predict,
@@ -170,20 +153,15 @@ def Model(features, labels, mode, params):
         }
         return tf.estimator.EstimatorSpec(mode, predictions=predictions)
 
-
-
-    ####### Calculating Loss and Optimizing #######
-
-    # logits과 같은 차원을 만들기 위해서 one-hot으로 decoder target 벡터의 차원을 변경한다.
-    #   - [배치 * max_sequence_length * vocabulary_length]
+    # 정답 차원 변경을 한다. [배치 * max_sequence_length * vocabulary_length]
+    # logits과 같은 차원을 만들기 위함이다.
     labels_ = tf.one_hot(labels, params['vocabulary_length'])
     loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(logits=logits, labels=labels_))
 
-    # Calculating Accuracy
     accuracy = tf.metrics.accuracy(labels=labels, predictions=predict)
+
     metrics = {'accuracy': accuracy}
     tf.summary.scalar('accuracy', accuracy[1])
-
 
     if EVAL:
         return tf.estimator.EstimatorSpec(mode, loss=loss, eval_metric_ops=metrics)

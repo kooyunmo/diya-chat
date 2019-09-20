@@ -94,48 +94,38 @@ def message(request, message, lm_name):
 
         os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
-
         tf.logging.set_verbosity(tf.logging.ERROR)
         arg_length = len(sys.argv)
 
         if (arg_length < 2):
             raise Exception("Don't call us. We'll call you")
 
-        # 데이터를 통한 사전 구성 한다.
+        # Construct vocab file
         char2idx, idx2char, vocabulary_length = tranformer_data.load_vocabulary()
 
-        # 테스트용 데이터 만드는 부분이다.
-        # 인코딩 부분 만든다.
+        ################# Encoder process #################
         input = message
 
         print(input)
-        predic_input_enc, predic_input_enc_length = tranformer_data.enc_processing([
-                                                                        input], char2idx)
-        # 학습 과정이 아니므로 디코딩 입력은
-        # 존재하지 않는다.(구조를 맞추기 위해 넣는다.)
-        predic_output_dec, predic_output_dec_length = tranformer_data.dec_output_processing([
-                                                                                            ""], char2idx)
-        # 학습 과정이 아니므로 디코딩 출력 부분도
-        # 존재하지 않는다.(구조를 맞추기 위해 넣는다.)
-        predic_target_dec = tranformer_data.dec_target_processing([
-                                                                  ""], char2idx)
+        predic_input_enc, predic_input_enc_length = tranformer_data.enc_processing([input], char2idx)
+        # Since it is not train process, there no input to decoder.
+        # "" (empty string) is delivered just for fitting in the fixed structure
+        predic_output_dec, predic_output_dec_length = tranformer_data.dec_output_processing([""], char2idx)
+        # Since it is not train process, there no output from decoder.
+        # "" (empty string) is delivered just for fitting in the fixed structure
+        predic_target_dec = tranformer_data.dec_target_processing([""], char2idx)
 
-        # 에스티메이터 구성한다.
+        # Construct tf estimator
         classifier = tf.estimator.Estimator(
-            model_fn=transformer.Model,  # 모델 등록한다.
-            # 체크포인트 위치 등록한다.
+            model_fn=transformer.Model,
             model_dir=DEFINES_transformer.check_point_path_transformer,
-            params={  # 모델 쪽으로 파라메터 전달한다.
+            params={  # Parameter passing to model
                 'embedding_size': DEFINES_transformer.embedding_size_transformer,
-                # 가중치 크기 설정한다.
                 'model_hidden_size': DEFINES_transformer.model_hidden_size_transformer,
                 'ffn_hidden_size': DEFINES_transformer.ffn_hidden_size_transformer,
                 'attention_head_size': DEFINES_transformer.attention_head_size_transformer,
-                # 학습율 설정한다.
                 'learning_rate': DEFINES_transformer.learning_rate_transformer,
-                # 딕셔너리 크기를 설정한다.
                 'vocabulary_length': vocabulary_length,
-                # 임베딩 크기를 설정한다.
                 'embedding_size': DEFINES_transformer.embedding_size_transformer,
                 'layer_size': DEFINES_transformer.layer_size_transformer,
                 'max_sequence_length': DEFINES_transformer.max_sequence_length_transformer,
@@ -146,16 +136,14 @@ def message(request, message, lm_name):
 
         for i in range(25):
             if i > 0:
-                predic_output_dec, predic_output_decLength = tranformer_data.dec_output_processing([
-                                                                                                   answer], char2idx)
-                predic_target_dec = tranformer_data.dec_target_processing(
-                    [answer], char2idx)
-            # 예측을 하는 부분이다.
+                predic_output_dec, predic_output_decLength = tranformer_data.dec_output_processing([answer], char2idx)
+                predic_target_dec = tranformer_data.dec_target_processing([answer], char2idx)
+
+            ########### Get predicted answer ##########
             predictions = classifier.predict(
                 input_fn=lambda: tranformer_data.eval_input_fn(predic_input_enc, predic_output_dec, predic_target_dec, 1))
 
-            answer, finished = tranformer_data.pred_next_string(
-                predictions, idx2char)
+            answer, finished = tranformer_data.pred_next_string(predictions, idx2char)
 
             if finished:
                 break
@@ -237,35 +225,37 @@ def message(request, message, lm_name):
                 export_dir="/home/evo_mind/DeepLearning/NLP/Work/ChatBot2_Final/data_out/model/1541575161"
             )
         else:
-            # 에스티메이터 구성한다.
+            # Construct estimator
             classifier = tf.estimator.Estimator(
-                model_fn=attention_seq2seq.Model,  # 모델 등록한다.
-                model_dir=DEFINES_attention_seq2seq.check_point_path_attention_seq2seq, # 체크포인트 위치 등록한다.
-                params={ # 모델 쪽으로 파라메터 전달한다.
-                    'hidden_size': DEFINES_attention_seq2seq.hidden_size_attention_seq2seq,  # 가중치 크기 설정한다.
-                    'layer_size': DEFINES_attention_seq2seq.layer_size_attention_seq2seq,  # 멀티 레이어 층 개수를 설정한다.
-                    'learning_rate': DEFINES_attention_seq2seq.learning_rate_attention_seq2seq,  # 학습율 설정한다.
+                model_fn=attention_seq2seq.Model,
+                model_dir=DEFINES_attention_seq2seq.check_point_path_attention_seq2seq,
+                params={
+                    'hidden_size': DEFINES_attention_seq2seq.hidden_size_attention_seq2seq,
+                    'layer_size': DEFINES_attention_seq2seq.layer_size_attention_seq2seq,
+                    'learning_rate': DEFINES_attention_seq2seq.learning_rate_attention_seq2seq,
                     'teacher_forcing_rate': DEFINES_attention_seq2seq.teacher_forcing_rate_attention_seq2seq, # 학습시 디코더 인풋 정답 지원율 설정
-                    'vocabulary_length': vocabulary_length,  # 딕셔너리 크기를 설정한다.
-                    'embedding_size': DEFINES_attention_seq2seq.embedding_size_attention_seq2seq,  # 임베딩 크기를 설정한다.
-                    'embedding': DEFINES_attention_seq2seq.embedding_attention_seq2seq,  # 임베딩 사용 유무를 설정한다.
-                    'multilayer': DEFINES_attention_seq2seq.multilayer_attention_seq2seq,  # 멀티 레이어 사용 유무를 설정한다.
-                    'attention': DEFINES_attention_seq2seq.attention_attention_seq2seq, #  어텐션 지원 유무를 설정한다.
-                    'teacher_forcing': DEFINES_attention_seq2seq.teacher_forcing_attention_seq2seq, # 학습시 디코더 인풋 정답 지원 유무 설정한다.
-                    'loss_mask': DEFINES_attention_seq2seq.loss_mask_attention_seq2seq, # PAD에 대한 마스크를 통한 loss를 제한 한다.
-                    'serving': DEFINES_attention_seq2seq.serving_attention_seq2seq # 모델 저장 및 serving 유무를 설정한다.
+                    'vocabulary_length': vocabulary_length,
+                    'embedding_size': DEFINES_attention_seq2seq.embedding_size_attention_seq2seq,
+                    'embedding': DEFINES_attention_seq2seq.embedding_attention_seq2seq,
+                    'multilayer': DEFINES_attention_seq2seq.multilayer_attention_seq2seq,
+                    'attention': DEFINES_attention_seq2seq.attention_attention_seq2seq,
+                    'teacher_forcing': DEFINES_attention_seq2seq.teacher_forcing_attention_seq2seq,
+                    'loss_mask': DEFINES_attention_seq2seq.loss_mask_attention_seq2seq, # PAD에 대한 마스크를 통해 loss를 제한
+                    'serving': DEFINES_attention_seq2seq.serving_attention_seq2seq
                 })
 
         if DEFINES_attention_seq2seq.serving_attention_seq2seq == True:
             predictions = predictor_fn({'input':predic_input_enc, 'output':predic_target_dec})
 
         else:
-            # 예측을 하는 부분이다.
             predictions = classifier.predict(
                 input_fn=lambda: attention_seq2seq_data.eval_input_fn(predic_input_enc, predic_target_dec, DEFINES_attention_seq2seq.batch_size_attention_seq2seq))
 
-        # 예측한 값을 인지 할 수 있도록 텍스트로 변경하는 부분이다.
+        # convert indexed sentence into string sentence
         answer = attention_seq2seq_data.pred2string(predictions, idx2char)
+
+    else:
+        answer = "죄송합니다. 아직 서비스 준비중 입니다. 빠른 시일 내에 완성하겠습니다."
 
 
     return HttpResponse("%s" % answer)

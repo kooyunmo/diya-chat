@@ -13,7 +13,7 @@ DATA_OUT_PATH = './data_out/'
 def serving_input_receiver_fn():
     receiver_tensor = {
         'input': tf.placeholder(dtype=tf.int32, shape=[None, DEFINES.max_sequence_length]),
-        'output': tf.placeholder(dtype=tf.int32, shape=[None, DEFINES.max_sequence_length])    
+        'output': tf.placeholder(dtype=tf.int32, shape=[None, DEFINES.max_sequence_length])
     }
     features = {
         key: tensor for key, tensor in receiver_tensor.items()
@@ -33,20 +33,20 @@ def main(self):
     train_input_enc, train_input_enc_length = data.enc_processing(train_input, char2idx)
     # 훈련셋 디코딩 출력 부분 만드는 부분이다.
     train_target_dec, train_target_dec_length = data.dec_target_processing(train_label, char2idx)
-    
+
     # 평가셋 인코딩 만드는 부분이다.
     eval_input_enc, eval_input_enc_length = data.enc_processing(eval_input,char2idx)
     # 평가셋 디코딩 출력 부분 만드는 부분이다.
     eval_target_dec, _ = data.dec_target_processing(eval_label, char2idx)
 
-    # 현재 경로'./'에 현재 경로 하부에 
+    # 현재 경로'./'에 현재 경로 하부에
     # 체크 포인트를 저장한 디렉토리를 설정한다.
     check_point_path = os.path.join(os.getcwd(), DEFINES.check_point_path)
     save_model_path = os.path.join(os.getcwd(), DEFINES.save_model_path)
-    # 디렉토리를 만드는 함수이며 두번째 인자 exist_ok가 
-    # True이면 디렉토리가 이미 존재해도 OSError가 
+    # 디렉토리를 만드는 함수이며 두번째 인자 exist_ok가
+    # True이면 디렉토리가 이미 존재해도 OSError가
     # 발생하지 않는다.
-    # exist_ok가 False이면 이미 존재하면 
+    # exist_ok가 False이면 이미 존재하면
     # OSError가 발생한다.
     os.makedirs(check_point_path, exist_ok=True)
     os.makedirs(save_model_path, exist_ok=True)
