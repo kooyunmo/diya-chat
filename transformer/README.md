@@ -2,4 +2,4 @@
 
 ## Structure
 
-![TransformerStructure][./img/transformer_structure.png]
+![TransformerStructure](./img/transformer_structure.png)
