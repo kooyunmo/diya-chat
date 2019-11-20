@@ -274,7 +274,7 @@ def rearrange(input, output, target):
 def train_input_fn(train_input_enc, train_output_dec, train_target_dec, batch_size):
     # Dataset을 생성하는 부분으로써 from_tensor_slices부분은 각각 한 문장으로 자른다고 보면 된다.
     # train_input_enc, train_output_dec, train_target_dec 3개를 각각 한문장으로 나눈다.
-    dataset = tf.data.Dataset.from_tensor_slices((train_input_enc, train_output_dec, train_target_dec))
+    dataset = tf.compat.v1.data.Dataset.from_tensor_slices((train_input_enc, train_output_dec, train_target_dec))
 
     # 전체 데이터를 섞는다.
     dataset = dataset.shuffle(buffer_size=len(train_input_enc))
@@ -304,7 +304,7 @@ def eval_input_fn(eval_input_enc, eval_output_dec, eval_target_dec, batch_size):
     # 각각 한 문장으로 자른다고 보면 된다.
     # eval_input_enc, eval_output_dec, eval_target_dec
     # 3개를 각각 한문장으로 나눈다.
-    dataset = tf.data.Dataset.from_tensor_slices((eval_input_enc, eval_output_dec, eval_target_dec))
+    dataset = tf.compat.v1.data.Dataset.from_tensor_slices((eval_input_enc, eval_output_dec, eval_target_dec))
     # 전체 데이터를 섞는다.
     dataset = dataset.shuffle(buffer_size=len(eval_input_enc))
     # 배치 인자 값이 없다면  에러를 발생 시킨다.
@@ -416,5 +416,5 @@ def main(self):
 
 
 if __name__ == '__main__':
-    tf.logging.set_verbosity(tf.logging.INFO)
-    tf.app.run(main)
+    tf.compat.v1.data.logging.set_verbosity(tf.compat.v1.data.logging.INFO)
+    tf.compat.v1.data.app.run(main)

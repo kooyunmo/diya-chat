@@ -35,6 +35,7 @@ from .attention_seq2seq import model as attention_seq2seq
 from .attention_seq2seq.configs import DEFINES as DEFINES_attention_seq2seq
 
 
+
 def index(request):
     chatroom_list = Room.objects.order_by('rank')[:5]
     context = {
@@ -94,7 +95,7 @@ def message(request, message, lm_name):
 
         os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
-        tf.logging.set_verbosity(tf.logging.ERROR)
+        tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
         arg_length = len(sys.argv)
 
         if (arg_length < 2):
@@ -115,8 +116,9 @@ def message(request, message, lm_name):
         # "" (empty string) is delivered just for fitting in the fixed structure
         predic_target_dec = tranformer_data.dec_target_processing([""], char2idx)
 
+
         # Construct tf estimator
-        classifier = tf.estimator.Estimator(
+        transformer_classifier = tf.estimator.Estimator(
             model_fn=transformer.Model,
             model_dir=DEFINES_transformer.check_point_path_transformer,
             params={  # Parameter passing to model
@@ -132,6 +134,7 @@ def message(request, message, lm_name):
                 'xavier_initializer': DEFINES_transformer.xavier_initializer_transformer
             })
 
+
         answer = ""
 
         for i in range(25):
@@ -140,7 +143,7 @@ def message(request, message, lm_name):
                 predic_target_dec = tranformer_data.dec_target_processing([answer], char2idx)
 
             ########### Get predicted answer ##########
-            predictions = classifier.predict(
+            predictions = transformer_classifier.predict(
                 input_fn=lambda: tranformer_data.eval_input_fn(predic_input_enc, predic_output_dec, predic_target_dec, 1))
 
             answer, finished = tranformer_data.pred_next_string(predictions, idx2char)
@@ -155,7 +158,7 @@ def message(request, message, lm_name):
     elif lm_name == 'seq2seq':
         print(lm_name)
 
-        tf.logging.set_verbosity(tf.logging.INFO)
+        tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.INFO)
         arg_length = len(sys.argv)
 
         if(arg_length < 2):
@@ -165,14 +168,13 @@ def message(request, message, lm_name):
         input = message
 
         print(input)
-        # 테스트셋 인코딩 / 디코딩 입력 / 디코딩 출력 만드는 부분이다.
+
         predic_input_enc, predic_input_enc_length = seq2seq_data.enc_processing([
                                                                         input], char2idx)
         predic_output_dec, predic_output_dec_length = seq2seq_data.dec_input_processing([
                                                                                 ""], char2idx)
         predic_target_dec = seq2seq_data.dec_target_processing([""], char2idx)
 
-        # 에스티메이터 구성
         classifier = tf.estimator.Estimator(
             model_fn=seq2seq.model,
             model_dir=DEFINES_seq2seq.check_point_path_seq2seq,
@@ -195,32 +197,25 @@ def message(request, message, lm_name):
     elif lm_name == 'attention_seq2seq':
         print(lm_name)
 
-        tf.logging.set_verbosity(tf.logging.INFO)
+        tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.INFO)
         arg_length = len(sys.argv)
 
         if(arg_length < 2):
             raise Exception("Don't call us. We'll call you")
 
-
-        # 데이터를 통한 사전 구성 한다.
         char2idx,  idx2char, vocabulary_length = attention_seq2seq_data.load_vocabulary()
 
-        # 테스트용 데이터 만드는 부분이다.
-        # 인코딩 부분 만든다.
         input = message
 
         print(input)
         predic_input_enc, predic_input_enc_length = attention_seq2seq_data.enc_processing([
                                                                                           input], char2idx)
-        # 학습 과정이 아니므로 디코딩 입력은
-        # 존재하지 않는다.(구조를 맞추기 위해 넣는다.)
-        # 학습 과정이 아니므로 디코딩 출력 부분도
-        # 존재하지 않는다.(구조를 맞추기 위해 넣는다.)
+
         predic_target_dec, _ = attention_seq2seq_data.dec_target_processing([
                                                                             ""], char2idx)
 
         if DEFINES_attention_seq2seq.serving_attention_seq2seq == True:
-            # 모델이 저장된 위치를 넣어 준다.  export_dir
+
             predictor_fn = tf.contrib.predictor.from_saved_model(
                 export_dir="/home/evo_mind/DeepLearning/NLP/Work/ChatBot2_Final/data_out/model/1541575161"
             )

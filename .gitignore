@@ -137,3 +137,6 @@ subtitles_html/
 
 # ignore jupyter notebook
 *.ipynb
+
+# vscode
+.vscode/
